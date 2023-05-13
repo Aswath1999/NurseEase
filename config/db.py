@@ -8,7 +8,7 @@ mongo_password=config("MONGOPASSWORD")
 
 
 
-uri = "mongodb+srv://cskaswath:acchu999@cluster0.a3nj9yv.mongodb.net/test1?retryWrites=true&w=majority"
+uri = "mongodb+srv://cskaswath:"+mongo_password+"@cluster0.a3nj9yv.mongodb.net/test1?retryWrites=true&w=majority"
 # Create a new client and connect to the server
 client = MongoClient(uri, tlsCAFile=certifi.where())
 # Send a ping to confirm a successful connection
