@@ -18,8 +18,15 @@
 			"version": "latest"
 		}
 	},
-	"postCreateCommand": "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && sudo apt-get update && sudo apt-get install -y docker-compose && pip install --upgrade pip && pip install -r requirements.txt",
-	"postStartCommand": "uvicorn main:app"
+	// "postCreateCommand": "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && sudo apt-get update && sudo apt-get install -y docker-compose && pip install --upgrade pip && pip install -r requirements.txt",
+	"postCreateCommand": ". ../path_to_setup_script.sh",
+	"postStartCommand": "cd app && docker-compose start",
+	// Privileged flag is needed to run docker-in-docker, the volume
+    // is needed or docker build will fail
+    "runArgs": ["--volume=/var/lib/docker", "--privileged"]
+    // "postCreateCommand": ". /app/scripts/codespaces.sh"
+
+	// "postStartCommand": "uvicorn main:app"
 }
 	  
 
