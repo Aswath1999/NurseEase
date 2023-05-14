@@ -18,7 +18,8 @@
 			"version": "latest"
 		}
 	},
-	"postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt"
+	"postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt",
+	"postStartCommand": "docker-compose up"
 }
 	  
 
