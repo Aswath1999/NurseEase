@@ -19,7 +19,7 @@
 		}
 	},
 	"postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt",
-	"postStartCommand": "docker-compose up"
+	"postStartCommand": "uvicorn main:app --host 0.0.0.0 --port 8000"
 }
 	  
 
