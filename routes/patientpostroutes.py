@@ -40,13 +40,11 @@ async def get_all_patient():
             result = cursor.fetchall()
             patients=[]
             for row in result:
-                patient_name_json = json.dumps(row)
+                patient_name_json = row[0]
+                print(type(patient_name_json))
                 print(patient_name_json)
-                # name=patient_name_json['given']
-                # print(name)
-                patient_name_data = json.loads(patient_name_json)
-                print(patient_name_json)
-                patients.append(patient_name_data[0][0]['given'])
+                print(patient_name_json[0]['given'])
+                patients.append(patient_name_json[0]['given'])
     except Exception as e:
         print("Error retrieving patient names:", e)
     finally:
