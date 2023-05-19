@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, validator
 from typing import List,Optional
 import datetime
 from datetime import date
+from fhirclient.models.fhirdate import FHIRDate
 
 class PatientCreate(BaseModel):
     resourceType: str = "Patient"
@@ -9,7 +10,7 @@ class PatientCreate(BaseModel):
     identifier: List[str]
     name: str
     gender: str
-    birthDate: Optional[datetime.datetime]
+    birthDate: Optional[FHIRDate]
     address: str
     @validator('birthDate', pre=True)
     def validate_birthdate(cls, v):
@@ -21,3 +22,5 @@ class PatientCreate(BaseModel):
             return v
     class Config:
         arbitrary_types_allowed = True
+
+    
