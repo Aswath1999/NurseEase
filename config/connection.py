@@ -10,10 +10,10 @@ class DatabaseManager:
     def connect_database(self):
         try:    
             host = 'balarama.db.elephantsql.com'
-            database = config("database")
+            database = config("DATABASE")
             user = config("user")
-            password = config("password")
-
+            password = config("PASSWORD")
+            
             # Establish the connection
             conn = psycopg2.connect(
                 host=host,
@@ -55,5 +55,5 @@ class DatabaseManager:
 
 # Usage example:
 db_manager = DatabaseManager()
-# db_manager.create_tables()
-# db_manager.close_connection()
+db_manager.create_tables()
+db_manager.close_connection()

@@ -19,10 +19,13 @@ def connect_database():
             user=user,
             password=password
         )
+        print('sucsss')
         return conn
     except Error as e:
+        print("Error connecting to database")
         print(e)
 
+print(connect_database())
 #create tables if does not exist in the database
 def create_tables():
     try:
