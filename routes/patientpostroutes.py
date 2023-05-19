@@ -29,7 +29,7 @@ async def create_patient(patient: Patient):
             return "Connection closed"
     
 
-
+#getting names of patients
 @patient.get("/patient")
 async def get_all_patient():
     try:
