@@ -50,11 +50,11 @@ async def get_all_patient(request: Request):
             patient_data = json.loads(row.patient) if row and row.patient else {}
             name = patient_data.get('name', [{}])[0].get('given', [None])[0]
             names.append(name)
-        return templates.TemplateResponse("patient.html", {"request": request, "names": names})
+        return templates.TemplateResponse("patients/patient.html", {"request": request, "names": names})
 
     except Exception as e:
             print("Error retrieving patient names:", e)
-            return templates.TemplateResponse("patient.html", {"request": request, "names": []})
+            return templates.TemplateResponse("patients/patient.html", {"request": request, "names": []})
     finally:
         if connection:
             connection.close_connection()
