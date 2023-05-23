@@ -1,71 +1,63 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from Models.models import Patient,DateEncoder
-from config.connection import DatabaseManager
+from config.db import DatabaseManager
+from config.db_tables import Patient as pat
 import json
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 from uuid import uuid4
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 
+templates = Jinja2Templates(directory="templates")
 
 patient= APIRouter()
 
 #post route for creating a new Patient
 @patient.post("/fhir/patient")
-async def create_patient(patient: Patient):
+async def create_patient(patient: Patient, request: Request):
     try:
         connection=DatabaseManager()
-        with connection.conn.cursor() as cursor:
-            primary_key_uuid = str(uuid4())
-            patient.id = primary_key_uuid
-            patient_json = json.dumps(patient.dict(by_alias=True), cls=DateEncoder)
-            insert_query = "INSERT INTO Patient (id, patient) VALUES (%s, %s)"
-            cursor.execute(insert_query, (primary_key_uuid, patient_json))
-            connection.conn.commit()
-            print("success")
+        # with connection.conn.cursor() as cursor:
+        primary_key_uuid = str(uuid4())
+        patient.id = primary_key_uuid
+        patient_json = json.dumps(patient.dict(by_alias=True), cls=DateEncoder)
+        # Create a new instance of the Patient model
+        patient_model = pat(id=primary_key_uuid, patient=patient_json)
+        # Add the patiet model to the session
+        connection.session.add(patient_model)
+        # Commit the changes to the database
+        connection.session.commit()
+        print("success")
     except Exception as e:
         print(e)
-        return e
+        return e  
     finally:
-        if connection:
+        if connection:                   # Close the session and connection
             connection.close_connection()
-            return "Connection closed"
     
 
 #getting names of patients
 @patient.get("/patient")
-async def get_all_patient():
+async def get_all_patient(request: Request):
     try:
-        connection=DatabaseManager()
-        with connection.conn.cursor() as cursor:
-            query = "SELECT patient->'name' FROM Patient"
-            cursor.execute(query)
-            result = cursor.fetchall()
-            patients=[]
-            for row in result:
-                patient_name_json = row[0]
-                print(type(patient_name_json))
-                print(patient_name_json)
-                print(patient_name_json[0]['given'])
-                patients.append(patient_name_json[0]['given'])
+        connection = DatabaseManager()
+        session: Session = connection.session
+        row = session.query(pat)
+        print(row)
+        names = []
+        for row in row:
+            patient_data = json.loads(row.patient) if row and row.patient else {}
+            name = patient_data.get('name', [{}])[0].get('given', [None])[0]
+            names.append(name)
+        return templates.TemplateResponse("patient.html", {"request": request, "names": names})
+
     except Exception as e:
-        print("Error retrieving patient names:", e)
+            print("Error retrieving patient names:", e)
+            return templates.TemplateResponse("patient.html", {"request": request, "names": []})
     finally:
         if connection:
-            if patients:
-                connection.close_connection()
-                return patients
             connection.close_connection()
 
 
-
-"""
-@patient.post("/fhir/patient")
-async def create_patient(patient: PatientCreate):
-    fhir_patient = FhirPatient(identifier=[{"value": value} for value in patient.identifier],
-        name=[{"text": patient.name}],
-        gender=patient.gender,
-        address=[{"text": patient.address}])
-    fhir_patient_json = fhir_patient.dict(by_alias=True)
-    fhir_patient_json['birthDate']=patient.birthDate
-    result = collection.insert_one(fhir_patient_json)
-    return {"id": str(result.inserted_id)}
-"""
 
