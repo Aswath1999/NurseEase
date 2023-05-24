@@ -44,7 +44,6 @@ async def get_all_patient(request: Request):
         connection = DatabaseManager()
         session: Session = connection.session
         row = session.query(pat)
-        print(row)
         names = []
         for row in row:
             patient_data = json.loads(row.patient) if row and row.patient else {}

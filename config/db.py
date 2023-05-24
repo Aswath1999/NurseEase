@@ -47,8 +47,11 @@ class DatabaseManager:
 
 
 # Usage example:
-# db_manager = DatabaseManager()
-# db_manager.create_tables()
+db_manager = DatabaseManager()
+db_manager.create_tables()
+# db_manager.delete_table('User')
+
+
 
 """
 from sqlalchemy import create_engine

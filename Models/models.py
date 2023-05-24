@@ -6,6 +6,7 @@ from fhir.resources.contactpoint import ContactPoint
 from fhir.resources.identifier import Identifier
 from fhir.resources.address import Address
 from json import JSONEncoder
+import re
 
 
 class DateEncoder(JSONEncoder):
@@ -31,7 +32,20 @@ class Patient(BaseModel):
         else:
             return v
 
-
+class UserCreation(BaseModel):
+    id: str
+    username: str
+    password: str
+    @validator('password')
+    def validate_password(cls, password: str) -> str:
+        # Password must be at least 8 characters long
+        if len(password) < 8:
+            raise ValueError("Password must be at least 8 characters long")
+        # Password must contain at least one special character
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+            raise ValueError("Password must contain at least one special character")
+        return password
+    
 """
 patient_data = {
     "id": "123",

@@ -16,4 +16,8 @@ class Patient(Base):
     id=Column(String, primary_key=True, default=str(uuid4()))
     patient = Column(JSONB)
 
-
+class User(Base):
+    __tablename__ = 'user'
+    id=Column(String, primary_key=True, default=str(uuid4()))
+    username=Column(String, unique=True)
+    password=Column(String(255))
