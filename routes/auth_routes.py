@@ -6,6 +6,9 @@ from uuid import uuid4
 from sqlalchemy.exc import IntegrityError
 from config.db import DatabaseManager
 from config.db_tables import User
+import bcrypt
+
+
 templates = Jinja2Templates(directory="templates")
 
 auth= APIRouter()
@@ -21,6 +24,7 @@ async def register(request: Request):
 @auth.post("/register",response_class=HTMLResponse)     
 async def register(request: Request,username: str = Form(...), password: str = Form(...)):
     try:
+        password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         user=UserCreation(username=username,password=password,id=str(uuid4()))
         new_user=User(id=user.id,username=user.username,password=user.password)
         connection=DatabaseManager()
@@ -31,7 +35,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
         return "sucess"
     except IntegrityError as e:
         # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
-        return "error1"
+        return e
     except ValueError as e:
         print(e)
         return "error2"
@@ -40,3 +44,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
         return "error3"
 
 
+
+
+# is_valid = bcrypt.checkpw(user_provided_password.encode('utf-8'), hashed_password)
+# if is_valid:

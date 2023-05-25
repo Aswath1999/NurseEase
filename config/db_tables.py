@@ -1,7 +1,8 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import  Column,String
+from sqlalchemy import  Column,String,Boolean
 from sqlalchemy.dialects.postgresql import JSONB
 from uuid import uuid4
+
 
 
 Base = declarative_base()
@@ -21,3 +22,7 @@ class User(Base):
     id=Column(String, primary_key=True, default=str(uuid4()))
     username=Column(String, unique=True)
     password=Column(String(255))
+    # activation = Column(Boolean, default=False)
+
+
+# have to still create observation table with patient id as foreign key
