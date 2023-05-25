@@ -1,6 +1,6 @@
 from typing import List, Optional
 from datetime import date
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, EmailStr
 from fhir.resources.humanname import HumanName
 from fhir.resources.contactpoint import ContactPoint
 from fhir.resources.identifier import Identifier
@@ -46,6 +46,11 @@ class UserCreation(BaseModel):
             raise ValueError("Password must contain at least one special character")
         return password
     
+class UserBase(BaseModel):
+    email: EmailStr
+    password:str
+    is_verified: bool=False
+
 """
 patient_data = {
     "id": "123",

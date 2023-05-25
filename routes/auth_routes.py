@@ -20,7 +20,7 @@ async def register(request: Request):
     except Exception as e:
         print(e)
          
-
+"""
 @auth.post("/register",response_class=HTMLResponse)     
 async def register(request: Request,username: str = Form(...), password: str = Form(...)):
     try:
@@ -42,8 +42,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
     except Exception as e:
         # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
         return "error3"
-
-
+"""
 
 
 # is_valid = bcrypt.checkpw(user_provided_password.encode('utf-8'), hashed_password)

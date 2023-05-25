@@ -3,6 +3,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import JSONB
 from decouple import config
 from config.db_tables import Base
+from fastapi import  HTTPException
+
 
 
 
@@ -20,7 +22,7 @@ class DatabaseManager:
             print("Connected database")
             return engine
         except Exception as e:
-            print(e)
+            raise HTTPException(status_code=500, detail="Failed to connect to the database")
 
    # Create tables if they do not exist
     def create_tables(self):
@@ -44,6 +46,10 @@ class DatabaseManager:
             self.session.close()
         if self.engine:
             self.engine.dispose()
+
+"""Function to use in Depends FastAPi"""
+def database_connection():
+    return DatabaseManager()
 
 
 # Usage example:
