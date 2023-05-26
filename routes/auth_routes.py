@@ -8,7 +8,8 @@ from config.db import DatabaseManager, database_connection
 from config.db_tables import User
 import bcrypt
 from fastapi.security import OAuth2PasswordRequestForm
-
+from .authentication import verify_token
+from .email import sendmail
 
 templates = Jinja2Templates(directory="templates")
 
@@ -36,9 +37,12 @@ async def register(request: Request,username: str = Form(...), password: str = F
         print(email)
         print(password)
         user=UserCreation(username=username,password=password,email=email,id=str(uuid4()))
-        print(user)
+        print(user) 
         new_user=User(id=user.id,username=user.username,password=user.password,email=user.email)
+
         print(new_user)
+        await sendmail([user.email], user)
+        print("sucess sending email")
         # Add the user model to the session
         db_manager.session.add(new_user)
             # Commit the changes to the database
@@ -58,7 +62,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
         if db_manager:
             db_manager.close_connection()
 
-
+"""
 @auth.post('/login/', status_code=status.HTTP_200_OK)
 # async def login(request:Request,username: str = Form(...), password: str = Form(...),db: DatabaseManager = Depends(database_connection)):
 async def login(request:Request,form_data: OAuth2PasswordRequestForm = Depends(),db: DatabaseManager = Depends(database_connection)):
@@ -78,12 +82,25 @@ async def login(request:Request,form_data: OAuth2PasswordRequestForm = Depends()
         status_code = status.HTTP_401_UNAUTHORIZED,
         detail= "Account Not Verified"
         )
-    access_token = create_access_token(data={'user_id':user.id})
+    # access_token = create_access_token(data={'user_id':user.id})
     return {
     'access_token':access_token,
     'token_type': 'bearer'
     }
-
+""" 
+@auth.get('/verification',response_class=HTMLResponse)
+async def email_verification(request:Request,token: str ):
+    user=await verify_token(token)
+    if user and not user.is_verified:
+        user.is_verified=True
+        await user.save()
+        print("sucess")
+        return "suceess" # return template
+    raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="invalid token",
+            headers={'WWW-Authenticate':'Bearer' }
+        )
 
 @auth.get("/login")
 async def register(request: Request):
