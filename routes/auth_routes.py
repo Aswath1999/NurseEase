@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Request, Form,Body
+from fastapi import APIRouter, Request, Form,Body,Depends, HTTPException,status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse,HTMLResponse
 from Models.models import UserCreation
 from uuid import uuid4
 from sqlalchemy.exc import IntegrityError
-from config.db import DatabaseManager
+from config.db import DatabaseManager, database_connection
 from config.db_tables import User
 import bcrypt
 
@@ -20,6 +20,74 @@ async def register(request: Request):
     except Exception as e:
         print(e)
          
+         
+@auth.post("/register",response_class=HTMLResponse)     
+async def register(request: Request,username: str = Form(...), password: str = Form(...),email: str = Form(...),db_manager: DatabaseManager = Depends(database_connection)):
+    try:
+        email_check = db_manager.session.query(User).filter(User.email ==email).first()
+        print(email_check)
+        if email_check !=None:
+           print("email already in use")
+           raise HTTPException(
+            detail='Email is already registered',
+            status_code= status.HTTP_409_CONFLICT)
+        password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        print(email)
+        print(password)
+        user=UserCreation(username=username,password=password,email=email,id=str(uuid4()))
+        print(user)
+        new_user=User(id=user.id,username=user.username,password=user.password,email=user.email)
+        print(new_user)
+        # Add the user model to the session
+        db_manager.session.add(new_user)
+            # Commit the changes to the database
+        db_manager.session.commit()
+        return "sucess" #Add remplate later
+    except IntegrityError as e:
+        # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
+        print(e)
+        return e
+    except ValueError as e:
+        print(e)
+        return "error2"
+    except Exception as e:
+        print(e)
+        return e
+    finally:
+        if db_manager:
+            db_manager.close_connection()
+
+
+@auth.post('/login/', status_code=status.HTTP_200_OK)
+async def login(request:Request,username: str = Form(...), password: str = Form(...),db: DatabaseManager = Depends(database_connection)):
+    # Filter search for user
+    user = db.query(User).filter(User.email== username).first()
+    if not user:
+        raise HTTPException(
+        status_code= status.HTTP_401_UNAUTHORIZED,
+        detail= "Invalid Username or Password",
+        headers={"WWW-Authenticate":"Bearer"}
+        )
+    if user.is_verified != True:
+        raise HTTPException(
+        status_code = status.HTTP_401_UNAUTHORIZED,
+        detail= "Account Not Verified"
+        )
+    access_token = create_access_token(data={'user_id':user.id})
+    return {
+    'access_token':access_token,
+    'token_type': 'bearer'
+    }
+
+
+@auth.get("/login")
+async def register(request: Request):
+    try:
+       return templates.TemplateResponse("Auth/login.html", {"request": request})
+    except Exception as e:
+        print(e)
+
+
 """
 @auth.post("/register",response_class=HTMLResponse)     
 async def register(request: Request,username: str = Form(...), password: str = Form(...)):

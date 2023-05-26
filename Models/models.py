@@ -34,8 +34,10 @@ class Patient(BaseModel):
 
 class UserCreation(BaseModel):
     id: str
+    email: EmailStr
     username: str
     password: str
+    is_verified: bool=False
     @validator('password')
     def validate_password(cls, password: str) -> str:
         # Password must be at least 8 characters long
@@ -46,10 +48,7 @@ class UserCreation(BaseModel):
             raise ValueError("Password must contain at least one special character")
         return password
     
-class UserBase(BaseModel):
-    email: EmailStr
-    password:str
-    is_verified: bool=False
+
 
 """
 patient_data = {

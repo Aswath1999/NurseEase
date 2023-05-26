@@ -17,16 +17,17 @@ class Patient(Base):
     id=Column(String, primary_key=True, default=str(uuid4()))
     patient = Column(JSONB)
 
-class User(Base):
-    __tablename__ = 'user'
-    id=Column(String, primary_key=True, default=str(uuid4()))
-    username=Column(String, unique=True)
-    password=Column(String(255))
-    # activation = Column(Boolean, default=False)
+# class User(Base):
+#     __tablename__ = 'user'
+#     id=Column(String, primary_key=True, default=str(uuid4()))
+#     username=Column(String, unique=True)
+#     password=Column(String(255))
+#     # activation = Column(Boolean, default=False)
 
 class User(Base):
     __tablename__ = "users"
     id = Column(String, primary_key=True, default=str(uuid4()))
+    username=Column(String, unique=True)
     email = Column(String, unique= True, nullable=False)
     password = Column(String,nullable=False)
     is_verified = Column(Boolean, default =False, nullable=False)
