@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from config.db import DatabaseManager, database_connection
 from config.db_tables import User
 import bcrypt
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 templates = Jinja2Templates(directory="templates")
@@ -59,9 +60,13 @@ async def register(request: Request,username: str = Form(...), password: str = F
 
 
 @auth.post('/login/', status_code=status.HTTP_200_OK)
-async def login(request:Request,username: str = Form(...), password: str = Form(...),db: DatabaseManager = Depends(database_connection)):
+# async def login(request:Request,username: str = Form(...), password: str = Form(...),db: DatabaseManager = Depends(database_connection)):
+async def login(request:Request,form_data: OAuth2PasswordRequestForm = Depends(),db: DatabaseManager = Depends(database_connection)):
     # Filter search for user
-    user = db.query(User).filter(User.email== username).first()
+    username = form_data.username
+    password = form_data.password
+    print(username, password)
+    user = db.query(User).filter(User.username== username).first()
     if not user:
         raise HTTPException(
         status_code= status.HTTP_401_UNAUTHORIZED,
@@ -86,7 +91,6 @@ async def register(request: Request):
        return templates.TemplateResponse("Auth/login.html", {"request": request})
     except Exception as e:
         print(e)
-
 
 """
 @auth.post("/register",response_class=HTMLResponse)     
