@@ -7,12 +7,13 @@ from sqlalchemy.exc import IntegrityError
 from config.db import DatabaseManager, database_connection
 from config.db_tables import User
 import bcrypt
-from .authentication import verify_token, is_logged_in,verifier,backend,cookie
+from .authentication import verify_token, is_logged_in,backend,cookie
 from .email import sendmail
 from sqlalchemy.orm import Session
 from decouple import config
 from fastapi_sessions.frontends.implementations import SessionCookie, CookieParameters
 from fastapi.responses import Response
+from urllib.parse import quote
 
 
 templates = Jinja2Templates(directory="templates")
@@ -102,7 +103,7 @@ async def login(
                 detail='Invalid email or password',
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
-        # Perform additional login actions if needed
+                # Perform additional login actions if needed
         cookie.attach_to_response(response, session_id)
         print(cookie)
 

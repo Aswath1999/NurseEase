@@ -21,24 +21,24 @@ cookie = SessionCookie(
     secret_key=config('SECRET_KEY'),
     cookie_params=cookie_params,
 )
-# Create a session verifier class
-class UserVerifier(SessionVerifier[UUID, SessionData]):
-    def __init__(self, backend: InMemoryBackend[UUID, SessionData]):
-        self._backend = backend
+# # Create a session verifier class
+# class UserVerifier(SessionVerifier[UUID, SessionData]):
+#     def __init__(self, backend: InMemoryBackend[UUID, SessionData]):
+#         self._backend = backend
 
-    @property
-    def backend(self):
-        return self._backend
+#     @property
+#     def backend(self):
+#         return self._backend
 
-    @backend.setter
-    def backend(self, backend):
-        self._backend = backend
+#     @backend.setter
+#     def backend(self, backend):
+#         self._backend = backend
 
-    def verify_session(self, model: SessionData) -> bool:
-        """If the session exists, it is valid"""
-        return True
+#     def verify_session(self, model: SessionData) -> bool:
+#         """If the session exists, it is valid"""
+#         return True
 
-verifier = UserVerifier(backend=backend)
+# verifier = UserVerifier(backend=backend)
 
 async def verify_token(token: str,session):
     try:
@@ -67,8 +67,7 @@ async def verify_token(token: str,session):
 
 
 
-# Decorator function to check if the user is logged in
-def is_logged_in(session_data: SessionData = Depends(verifier)):
+
+def is_logged_in(session_data: SessionData = Depends(cookie)):
     if session_data is None:
-        print("You must be logged in")
         raise HTTPException(status_code=401, detail="Not authenticated")
