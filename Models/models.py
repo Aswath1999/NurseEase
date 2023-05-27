@@ -48,7 +48,8 @@ class UserCreation(BaseModel):
             raise ValueError("Password must contain at least one special character")
         return password
     
-
+class SessionData(BaseModel):
+    user_id: str
 
 """
 patient_data = {

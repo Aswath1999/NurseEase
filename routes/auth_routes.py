@@ -1,20 +1,26 @@
 from fastapi import APIRouter, Request, Form,Body,Depends, HTTPException,status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse,HTMLResponse
-from Models.models import UserCreation
-from uuid import uuid4
+from Models.models import UserCreation, SessionData
+from uuid import uuid4,UUID
 from sqlalchemy.exc import IntegrityError
 from config.db import DatabaseManager, database_connection
 from config.db_tables import User
 import bcrypt
-from fastapi.security import OAuth2PasswordRequestForm
-from .authentication import verify_token
+from .authentication import verify_token, is_logged_in,verifier,backend,cookie
 from .email import sendmail
 from sqlalchemy.orm import Session
+from decouple import config
+from fastapi_sessions.frontends.implementations import SessionCookie, CookieParameters
+from fastapi.responses import Response
+
 
 templates = Jinja2Templates(directory="templates")
 
 auth= APIRouter()
+
+
+
 
 @auth.get("/register")
 async def register(request: Request):
@@ -64,13 +70,19 @@ async def register(request: Request,username: str = Form(...), password: str = F
 @auth.post("/login")
 async def login(
     request: Request,
-    email: str = Form(...),
+    response: Response,
+    username: str = Form(...),
     password: str = Form(...),
     session: Session = Depends(database_connection)
+  
 ):
     try:
+
         # Check if the email exists in the database
-        user = session.query(User).filter(User.email == email).first()
+        user = session.query(User).filter(User.username == username).first()
+        session_id = uuid4()
+        session_data = SessionData(user_id=user.id)
+        await backend.create(session_id, session_data)
         if user is None:
             raise HTTPException(
                 detail='Invalid email or password',
@@ -90,9 +102,10 @@ async def login(
                 detail='Invalid email or password',
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
-        
         # Perform additional login actions if needed
-        
+        cookie.attach_to_response(response, session_id)
+        print(cookie)
+
         # Return a success response
         return {"message": "Login successful"}
     
@@ -109,6 +122,17 @@ async def register(request: Request):
     except Exception as e:
         print(e)
 
+
+@auth.get("/logout")
+async def logout(request: Request, response: Response):
+    session_id = request.cookies.get("session")
+    print(session_id)
+    if session_id:
+        backend.delete(session_id)
+        cookie.delete_from_response(response)
+        return {"message": "Logout successful"}
+    else:
+        raise HTTPException(status_code=400, detail="No active session")
 
 
 @auth.get('/verification',response_class=HTMLResponse)
@@ -132,3 +156,11 @@ async def email_verification(request:Request,token: str,session: Session = Depen
 
 # is_valid = bcrypt.checkpw(user_provided_password.encode('utf-8'), hashed_password)
 # if is_valid:
+
+
+# @app.get("/profile")
+# async def profile(session_data: SessionData = Depends(verifier)):
+#     user_id = session_data.user_id
+#     # Retrieve user from the database using user_id
+#     # ...
+#     return {"user_id": user_id, "username": user.username}
