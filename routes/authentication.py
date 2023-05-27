@@ -70,4 +70,5 @@ async def verify_token(token: str,session):
 # Decorator function to check if the user is logged in
 def is_logged_in(session_data: SessionData = Depends(verifier)):
     if session_data is None:
+        print("You must be logged in")
         raise HTTPException(status_code=401, detail="Not authenticated")

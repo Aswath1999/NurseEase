@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from uuid import uuid4
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from .authentication import  is_logged_in
+
 
 templates = Jinja2Templates(directory="templates")
 
@@ -36,10 +38,10 @@ async def create_patient(patient: Patient, request: Request,db_manager: Database
     
 #getting names of patients
 @patient.get("/fhir/patient")
-async def get_all_patient(request: Request,db_manager: DatabaseManager = Depends(database_connection)):
+async def get_all_patient(request: Request,session: Session = Depends(database_connection),user: str = Depends(is_logged_in)):
     try:
         # session: Session = connection.session
-        row = db_manager.session.query(pat)
+        row = session.query(pat)
         names = []
         for row in row:
             patient_data = json.loads(row.patient) if row and row.patient else {}
@@ -49,10 +51,7 @@ async def get_all_patient(request: Request,db_manager: DatabaseManager = Depends
 
     except Exception as e:
             print("Error retrieving patient names:", e)
-            return templates.TemplateResponse("patients/patient.html", {"request": request, "names": []})
-    finally:
-        if db_manager:
-            db_manager.close_connection()
+
 
 
 
