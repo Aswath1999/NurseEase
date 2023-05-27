@@ -10,6 +10,7 @@ import bcrypt
 from fastapi.security import OAuth2PasswordRequestForm
 from .authentication import verify_token
 from .email import sendmail
+from sqlalchemy.orm import Session
 
 templates = Jinja2Templates(directory="templates")
 
@@ -24,9 +25,9 @@ async def register(request: Request):
          
          
 @auth.post("/register",response_class=HTMLResponse)     
-async def register(request: Request,username: str = Form(...), password: str = Form(...),email: str = Form(...),db_manager: DatabaseManager = Depends(database_connection)):
+async def register(request: Request,username: str = Form(...), password: str = Form(...),email: str = Form(...),session: Session = Depends(database_connection)):
     try:
-        email_check = db_manager.session.query(User).filter(User.email ==email).first()
+        email_check = session.query(User).filter(User.email ==email).first()
         print(email_check)
         if email_check !=None:
            print("email already in use")
@@ -44,9 +45,9 @@ async def register(request: Request,username: str = Form(...), password: str = F
         await sendmail([user.email], user)
         print("sucess sending email")
         # Add the user model to the session
-        db_manager.session.add(new_user)
+        session.add(new_user)
             # Commit the changes to the database
-        db_manager.session.commit()
+        session.commit()
         return "sucess" #Add remplate later
     except IntegrityError as e:
         # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
@@ -58,48 +59,47 @@ async def register(request: Request,username: str = Form(...), password: str = F
     except Exception as e:
         print(e)
         return e
-    finally:
-        if db_manager:
-            db_manager.close_connection()
 
-"""
-@auth.post('/login/', status_code=status.HTTP_200_OK)
-# async def login(request:Request,username: str = Form(...), password: str = Form(...),db: DatabaseManager = Depends(database_connection)):
-async def login(request:Request,form_data: OAuth2PasswordRequestForm = Depends(),db: DatabaseManager = Depends(database_connection)):
-    # Filter search for user
-    username = form_data.username
-    password = form_data.password
-    print(username, password)
-    user = db.query(User).filter(User.username== username).first()
-    if not user:
+
+@auth.post("/login")
+async def login(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    session: Session = Depends(database_connection)
+):
+    try:
+        # Check if the email exists in the database
+        user = session.query(User).filter(User.email == email).first()
+        if user is None:
+            raise HTTPException(
+                detail='Invalid email or password',
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        # Verify if the user is verified
+        if not user.is_verified:
+            raise HTTPException(
+                detail='User is not verified',
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        # Verify the password
+        if not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            raise HTTPException(
+                detail='Invalid email or password',
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        # Perform additional login actions if needed
+        
+        # Return a success response
+        return {"message": "Login successful"}
+    
+    except Exception as e:
         raise HTTPException(
-        status_code= status.HTTP_401_UNAUTHORIZED,
-        detail= "Invalid Username or Password",
-        headers={"WWW-Authenticate":"Bearer"}
-        )
-    if user.is_verified != True:
-        raise HTTPException(
-        status_code = status.HTTP_401_UNAUTHORIZED,
-        detail= "Account Not Verified"
-        )
-    # access_token = create_access_token(data={'user_id':user.id})
-    return {
-    'access_token':access_token,
-    'token_type': 'bearer'
-    }
-""" 
-@auth.get('/verification',response_class=HTMLResponse)
-async def email_verification(request:Request,token: str ):
-    user=await verify_token(token)
-    if user and not user.is_verified:
-        user.is_verified=True
-        await user.save()
-        print("sucess")
-        return "suceess" # return template
-    raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="invalid token",
-            headers={'WWW-Authenticate':'Bearer' }
+            detail='An error occurred during login',
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 @auth.get("/login")
@@ -109,29 +109,25 @@ async def register(request: Request):
     except Exception as e:
         print(e)
 
-"""
-@auth.post("/register",response_class=HTMLResponse)     
-async def register(request: Request,username: str = Form(...), password: str = Form(...)):
-    try:
-        password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user=UserCreation(username=username,password=password,id=str(uuid4()))
-        new_user=User(id=user.id,username=user.username,password=user.password)
-        connection=DatabaseManager()
-        # Add the user model to the session
-        connection.session.add(new_user)
-        # Commit the changes to the database
-        connection.session.commit()
-        return "sucess"
-    except IntegrityError as e:
-        # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
-        return e
-    except ValueError as e:
-        print(e)
-        return "error2"
-    except Exception as e:
-        # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
-        return "error3"
-"""
+
+
+@auth.get('/verification',response_class=HTMLResponse)
+async def email_verification(request:Request,token: str,session: Session = Depends(database_connection)):
+    user=await verify_token(token,session)
+    if user and not user.is_verified:
+        user.is_verified=True
+        session.add(user)
+        session.commit()
+        print("sucess")
+        return "suceess" # return template
+    raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="invalid token",
+            headers={'WWW-Authenticate':'Bearer' }
+        )
+
+
+
 
 
 # is_valid = bcrypt.checkpw(user_provided_password.encode('utf-8'), hashed_password)

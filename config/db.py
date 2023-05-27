@@ -43,13 +43,17 @@ class DatabaseManager:
     # Close the session and engine
     def close_connection(self):
         if self.session:
+            print("Closing session")
             self.session.close()
         if self.engine:
+            print("Closing engine")
             self.engine.dispose()
 
 """Function to use in Depends FastAPi"""
 def database_connection():
-    return DatabaseManager()
+    db_manager = DatabaseManager()
+    yield db_manager.session
+    db_manager.close_connection()
 
 
 # Usage example:
