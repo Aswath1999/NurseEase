@@ -57,8 +57,8 @@ def database_connection():
 
 
 # Usage example:
-db_manager = DatabaseManager()
-db_manager.create_tables()
+# db_manager = DatabaseManager()
+# db_manager.create_tables()
 # db_manager.delete_table('user')
 # db_manager.close_connection()
 

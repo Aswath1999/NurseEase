@@ -7,18 +7,18 @@ from sqlalchemy.exc import IntegrityError
 from config.db import DatabaseManager, database_connection
 from config.db_tables import User
 import bcrypt
-from .authentication import verify_token, is_logged_in,backend,cookie
+from .authentication import verify_token,backend
 from .email import sendmail
 from sqlalchemy.orm import Session
-from decouple import config
 from fastapi_sessions.frontends.implementations import SessionCookie, CookieParameters
 from fastapi.responses import Response
 from urllib.parse import quote
-
+import json
 
 templates = Jinja2Templates(directory="templates")
 
 auth= APIRouter()
+
 
 
 
@@ -104,8 +104,16 @@ async def login(
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
                 # Perform additional login actions if needed
-        cookie.attach_to_response(response, session_id)
-        print(cookie)
+        # cookie.attach_to_response(response, session_id)
+        # cookie.attach_to_response(response, "session", session_id)
+        # Convert session_data to JSON
+        session_data_json = json.dumps(session_data.dict())
+        
+        # Set session_id and session_data as cookies
+        response.set_cookie(key="session", value=session_id)
+        response.set_cookie(key="session_data", value=session_data_json)
+
+
 
         # Return a success response
         return {"message": "Login successful"}
@@ -117,7 +125,7 @@ async def login(
         )
 
 @auth.get("/login")
-async def register(request: Request):
+async def login(request: Request):
     try:
        return templates.TemplateResponse("Auth/login.html", {"request": request})
     except Exception as e:
@@ -127,13 +135,20 @@ async def register(request: Request):
 @auth.get("/logout")
 async def logout(request: Request, response: Response):
     session_id = request.cookies.get("session")
-    print(session_id)
+    session_data_json = request.cookies.get("session_data")
+    
     if session_id:
-        backend.delete(session_id)
-        cookie.delete_from_response(response)
-        return {"message": "Logout successful"}
+        response.delete_cookie(key="session")
+    
+    if session_data_json:
+        response.delete_cookie(key="session_data")
+    
+    if not session_id and not session_data_json:
+        return {"message": "No active session"}
     else:
-        raise HTTPException(status_code=400, detail="No active session")
+        return {"message": "Logged out successfully"}
+
+
 
 
 @auth.get('/verification',response_class=HTMLResponse)
@@ -152,16 +167,3 @@ async def email_verification(request:Request,token: str,session: Session = Depen
         )
 
 
-
-
-
-# is_valid = bcrypt.checkpw(user_provided_password.encode('utf-8'), hashed_password)
-# if is_valid:
-
-
-# @app.get("/profile")
-# async def profile(session_data: SessionData = Depends(verifier)):
-#     user_id = session_data.user_id
-#     # Retrieve user from the database using user_id
-#     # ...
-#     return {"user_id": user_id, "username": user.username}

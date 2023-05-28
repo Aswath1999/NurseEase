@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request,Depends
-from Models.models import Patient,DateEncoder
+from Models.models import Patient,DateEncoder,SessionData
 from config.db import DatabaseManager,database_connection
 from config.db_tables import Patient as pat
 import json
@@ -37,10 +37,14 @@ async def create_patient(patient: Patient, request: Request,db_manager: Database
             db_manager.close_connection()
     
 #getting names of patients
+
 @patient.get("/fhir/patient")
-async def get_all_patient(request: Request,session: Session = Depends(database_connection),user: str = Depends(is_logged_in)):
+@is_logged_in
+async def get_all_patient(request: Request,user_id: int = Depends(is_logged_in),session: Session = Depends(database_connection)):
     try:
         # session: Session = connection.session
+        if user_id is None:
+            return RedirectResponse(url='/login')
         row = session.query(pat)
         names = []
         for row in row:
@@ -50,7 +54,10 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
         return templates.TemplateResponse("patients/patient.html", {"request": request, "names": names})
 
     except Exception as e:
-            print("Error retrieving patient names:", e)
+        print("Error")
+        print("Error retrieving patient names:", e)
+        return e
+        
 
 
 
