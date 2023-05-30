@@ -25,19 +25,37 @@ backend = InMemoryBackend[UUID, SessionData]()
 cookie_params = CookieParameters()
 
 
-def get_user_id_from_session(request: Request):
-    session_data_json = request.cookies.get("session_data")
-    if session_data_json:
-        session_data = json.loads(session_data_json)
-        user_id = session_data.get("user_id")
-        if user_id:
-            return user_id
-    return None
 
-def is_logged_in(user_id: int = Depends(get_user_id_from_session)):
-    if user_id:
-        return user_id
-    return None
+def is_logged_in(func):
+    @wraps(func)
+    async def wrapper(request: Request, *args, **kwargs):
+        session_data_json = request.cookies.get("session_data")
+        if session_data_json:
+            session_data = json.loads(session_data_json)
+            user_id = session_data.get("user_id")
+            if user_id:
+                return await func(request, *args, **kwargs)
+
+        return RedirectResponse(url='/login')
+
+    return wrapper
+
+
+
+
+# def get_user_id_from_session(request: Request):
+#     session_data_json = request.cookies.get("session_data")
+#     if session_data_json:
+#         session_data = json.loads(session_data_json)
+#         user_id = session_data.get("user_id")
+#         if user_id:
+#             return user_id
+#     return None
+
+# def is_logged_in(user_id: int = Depends(get_user_id_from_session)):
+#     if user_id:
+#         return user_id
+#     return None
 
 # def is_logged_in(func):
 #     @wraps(func)

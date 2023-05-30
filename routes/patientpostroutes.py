@@ -40,11 +40,9 @@ async def create_patient(patient: Patient, request: Request,db_manager: Database
 
 @patient.get("/fhir/patient")
 @is_logged_in
-async def get_all_patient(request: Request,user_id: int = Depends(is_logged_in),session: Session = Depends(database_connection)):
+async def get_all_patient(request: Request,session: Session = Depends(database_connection)):
     try:
         # session: Session = connection.session
-        if user_id is None:
-            return RedirectResponse(url='/login')
         row = session.query(pat)
         names = []
         for row in row:
