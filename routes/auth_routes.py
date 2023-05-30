@@ -67,18 +67,23 @@ async def register(request: Request,username: str = Form(...), password: str = F
         print(e)
         return e
 
+@auth.get("/login")
+async def login(request: Request):
+    try:
+       return templates.TemplateResponse("Auth/login.html", {"request": request})
+    except Exception as e:
+        print(e)
 
-@auth.post("/login")
-async def login(
+
+@auth.post("/login", include_in_schema=False)
+async def login_post(
     request: Request,
     response: Response,
     username: str = Form(...),
     password: str = Form(...),
     session: Session = Depends(database_connection)
-  
 ):
     try:
-
         # Check if the email exists in the database
         user = session.query(User).filter(User.username == username).first()
         session_id = uuid4()
@@ -103,17 +108,20 @@ async def login(
                 detail='Invalid email or password',
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
-                # Perform additional login actions if needed
-        # cookie.attach_to_response(response, session_id)
-        # cookie.attach_to_response(response, "session", session_id)
-        # Convert session_data to JSON
+
+        # Perform additional login actions if needed
         session_data_json = json.dumps(session_data.dict())
         
         # Set session_id and session_data as cookies
         response.set_cookie(key="session", value=session_id)
         response.set_cookie(key="session_data", value=session_data_json)
-
-
+        # redirect_url = request.cookies.get("redirect_url")
+        # print(redirect_url)
+        # if redirect_url:
+        #     response.delete_cookie(key="redirect_url")
+        #     print(request.cookies.get("redirect_url"))
+        #     # Redirect the user back to the originally requested URL using a GET request
+        #     return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
         # Return a success response
         return {"message": "Login successful"}
@@ -124,12 +132,7 @@ async def login(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
-@auth.get("/login")
-async def login(request: Request):
-    try:
-       return templates.TemplateResponse("Auth/login.html", {"request": request})
-    except Exception as e:
-        print(e)
+
 
 
 @auth.get("/logout")

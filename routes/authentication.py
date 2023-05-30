@@ -30,13 +30,18 @@ def is_logged_in(func):
     @wraps(func)
     async def wrapper(request: Request, *args, **kwargs):
         session_data_json = request.cookies.get("session_data")
+        print(session_data_json)
         if session_data_json:
             session_data = json.loads(session_data_json)
             user_id = session_data.get("user_id")
             if user_id:
                 return await func(request, *args, **kwargs)
 
-        return RedirectResponse(url='/login')
+        # Store the requested URL in a cookie
+        redirect_url = request.url.path
+        response = RedirectResponse(url='/login',status_code=status.HTTP_303_SEE_OTHER)
+        # response.set_cookie(key="redirect_url", value=redirect_url)
+        return response
 
     return wrapper
 
