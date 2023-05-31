@@ -11,16 +11,7 @@ from fastapi_sessions.session_verifier import SessionVerifier
 from uuid import UUID
 import json
 
-# Create instances of the backend and frontend classes
-# backend = InMemoryBackend[UUID, SessionData]()
-# cookie_params = CookieParameters()
-# cookie = SessionCookie(
-#     cookie_name="session",
-#     identifier="general_verifier",
-#     auto_error=True,
-#     secret_key=config('SECRET_KEY'),
-#     cookie_params=cookie_params,
-# )
+
 backend = InMemoryBackend[UUID, SessionData]()
 cookie_params = CookieParameters()
 

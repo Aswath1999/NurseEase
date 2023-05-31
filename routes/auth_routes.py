@@ -141,9 +141,15 @@ async def login_post(
 
 
 @auth.get("/logout")
-async def logout(request: Request, response: Response):
+async def logout(request: Request, response: Response,session: Session = Depends(database_connection)):
     session_id = request.cookies.get("session")
     session_data_json = request.cookies.get("session_data")
+    session_data = json.loads(session_data_json)
+    user_id = session_data.get("user_id")
+    user = session.query(User).filter(User.id == user_id).first()
+    user.is_online = False # user is set offline
+    session.add(user)
+    session.commit()
     
     if session_id:
         response.delete_cookie(key="session")
