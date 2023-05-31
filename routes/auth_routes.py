@@ -115,6 +115,11 @@ async def login_post(
         # Set session_id and session_data as cookies
         response.set_cookie(key="session", value=session_id)
         response.set_cookie(key="session_data", value=session_data_json)
+        user.is_online = True
+        # Add the user model to the session
+        session.add(user)
+            # Commit the changes to the database
+        session.commit()
         # redirect_url = request.cookies.get("redirect_url")
         # print(redirect_url)
         # if redirect_url:

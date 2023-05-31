@@ -38,6 +38,7 @@ class UserCreation(BaseModel):
     username: str
     password: str
     is_verified: bool=False
+    is_online: bool=False
     @validator('password')
     def validate_password(cls, password: str) -> str:
         # Password must be at least 8 characters long
