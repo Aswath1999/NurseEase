@@ -1,5 +1,4 @@
 venv/
+alembic.ini
 .env
 docker
-alembic.ini
-.gitignore
