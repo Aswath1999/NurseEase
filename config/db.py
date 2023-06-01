@@ -64,8 +64,9 @@ def get_database_url():
 # Usage example:
 # db_manager = DatabaseManager()
 # db_manager.create_tables()
-# db_manager.delete_table('user')
+# db_manager.delete_table('alembic_version')
 # db_manager.close_connection()
+
 
 
 
