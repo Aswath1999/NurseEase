@@ -35,6 +35,7 @@ async def create_patient(patient: Patient, request: Request,session: Session = D
 """ 
 #getting names of patients
 @patient.post("/fhir/patient")
+@is_logged_in
 async def create_patient(request: Request, session: Session = Depends(database_connection)):
     try:
         form = await request.form()
@@ -47,6 +48,8 @@ async def create_patient(request: Request, session: Session = Depends(database_c
         city = form.get("city")
         state = form.get("state")
         country = form.get("country")
+        assigned_to = form.get("assigned")
+        print(assigned_to)
         
         patient = Patient(
             identifier=[
@@ -80,7 +83,17 @@ async def create_patient(request: Request, session: Session = Depends(database_c
         patient.id = primary_key_uuid
         
         patient_json = json.dumps(patient.dict(by_alias=True), cls=DateEncoder)
-        patient_model = pat(id=primary_key_uuid, patient=patient_json)
+        if assigned_to== "self": 
+            print("ok")
+            session_data_json = request.cookies.get("session_data") 
+            session_data = json.loads(session_data_json)
+            user_id = session_data.get("user_id")  
+            print(user_id)
+            patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id)
+            print(patient_model)
+        else:
+            patient_model = pat(id=primary_key_uuid, patient=patient_json)
+        
         session.add(patient_model)
         session.commit()
         print("sucess")
@@ -91,6 +104,7 @@ async def create_patient(request: Request, session: Session = Depends(database_c
         return e
 
 @patient.get("/createpatient")
+@is_logged_in
 async def create_patient(request: Request):
     try:
        return templates.TemplateResponse("patients/createpatient.html", {"request": request})
@@ -104,7 +118,7 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
     try:
         # session: Session = connection.session
         row = session.query(pat)
-        names = []
+        names = []       #try whether you can directly query only the names of the patients
         for row in row:
             patient_data = json.loads(row.patient) if row and row.patient else {}
             name = patient_data.get('name', [{}])[0].get('given', [None])[0]
