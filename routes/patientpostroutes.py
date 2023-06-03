@@ -118,6 +118,7 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
     try:
         # session: Session = connection.session
         row = session.query(pat)
+        print(type(row))
         names = []       #try whether you can directly query only the names of the patients
         for row in row:
             patient_data = json.loads(row.patient) if row and row.patient else {}
@@ -136,3 +137,8 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
 
 
 
+# @patient.get("/patient")
+# async def get_all_patient(request: Request,session: Session = Depends(database_connection)):
+#     try:
+#         # session: Session = connection.session
+#         row = session.query(pat)

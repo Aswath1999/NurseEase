@@ -19,6 +19,8 @@ class Patient(Base):
     id=Column(String, primary_key=True, default=str(uuid4()))
     patient = Column(JSONB)
     user_id = Column(String, ForeignKey('users.id'), nullable=True)
+    treatment_in_progress = Column(String, nullable=True)
+    
     user = relationship("User", back_populates="patients")
 
 class User(Base):
