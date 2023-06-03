@@ -12,15 +12,6 @@ from fastapi import HTTPException, status
 import jwt
 import markdown
 
-# configuration = ConnectionConfig(
-# MAIL_USERNAME=config('MAIL_USERNAME'),
-# MAIL_PASSWORD=config('MAIL_PASSWORD'),
-# MAIL_FROM=config('MAIL_FROM'),
-# MAIL_PORT=int(config('MAIL_PORT')),
-# MAIL_SERVER=config('MAIL_SERVER'),
-# MAIL_TLS=True,
-# MAIL_SSL=False,
-# )
 
 configuration = ConnectionConfig(
     MAIL_USERNAME=config('MAIL_USERNAME'),
@@ -84,16 +75,4 @@ async def sendmail(email: List[str],instance:UserCreation):
         )
  
 
-# async def send_email_async(subject:str, email_to:EmailStr, body:dict,template:str):
-#     message = MessageSchema(
-#     subject=subject,
-#     recipients= [email_to,],
-#     template_body=body,
-#     )
-#     fm = FastMail(configuration)
-#     try:
-#         await fm.send_message(message, template_name=template)
-#         return True
-#     except ConnectionErrors as e:
-#         # print(e)
-#         return False
+

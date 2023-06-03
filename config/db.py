@@ -56,10 +56,7 @@ def database_connection():
     db_manager.close_connection()
 
 
-""" for the almebic file"""
-def get_database_url():
-    # Retrieve the database URL from environment variables, configuration files, etc.
-    return config("DATABASE_URL")
+
 
 # Usage example:
 # db_manager = DatabaseManager()

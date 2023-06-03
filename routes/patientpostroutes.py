@@ -14,25 +14,7 @@ from .authentication import  is_logged_in
 templates = Jinja2Templates(directory="templates")
 
 patient= APIRouter()
-"""
-#post route for creating a new Patient
-@patient.post("/fhir/patient")
-async def create_patient(patient: Patient, request: Request,session: Session = Depends(database_connection)):
-    try:
-        primary_key_uuid = str(uuid4())
-        patient.id = primary_key_uuid
-        patient_json = json.dumps(patient.dict(by_alias=True), cls=DateEncoder)
-        # Create a new instance of the Patient model
-        patient_model = pat(id=primary_key_uuid, patient=patient_json)
-        # Add the patiet model to the session
-        session.add(patient_model)
-        # Commit the changes to the database
-        session.commit()
-        print("success")
-    except Exception as e:
-        print(e)
-        return e  
-""" 
+
 #getting names of patients
 @patient.post("/fhir/patient")
 @is_logged_in
@@ -89,10 +71,10 @@ async def create_patient(request: Request, session: Session = Depends(database_c
             session_data = json.loads(session_data_json)
             user_id = session_data.get("user_id")  
             print(user_id)
-            patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id)
+            patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id,treatment_in_progress=True)
             print(patient_model)
         else:
-            patient_model = pat(id=primary_key_uuid, patient=patient_json)
+            patient_model = pat(id=primary_key_uuid, patient=patient_json,treatment_in_progress=True)
         
         session.add(patient_model)
         session.commit()

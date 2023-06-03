@@ -52,38 +52,5 @@ class UserCreation(BaseModel):
 class SessionData(BaseModel):
     user_id: str
 
-"""
-patient_data = {
-    "id": "123",
-    "identifier": [
-        {"value": "ABC123"},
-        {"value": "XYZ789"}
-    ],
-    "name": [
-        {
-            "given": ["John"],
-            "family": "Doe"
-        }
-    ],
-    "telecom": [
-        {
-            "system": "phone",
-            "value": "123-456-7890"
-        }
-    ],
-    "gender": "male",
-    "birthDate": {
-        "date": "1980-01-01"
-    },
-    "address": [
-        {
-            "city": "New York",
-            "state": "NY",
-            "country": "USA"
-        }
-    ]
-}
-patient = Patient(**patient_data)
-print(patient)
-"""
+
 
