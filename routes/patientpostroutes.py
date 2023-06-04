@@ -79,7 +79,9 @@ async def create_patient(request: Request, session: Session = Depends(database_c
                 if users:
                     user_id=users[0].id
                     print(user_id)
-                    patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id,treatment_in_progress=True)#
+                    patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id,treatment_in_progress=True)
+                else:  
+                   patient_model = pat(id=primary_key_uuid, patient=patient_json,treatment_in_progress=True) #leave user as empty to assign later
             except Exception as e:
                 print(e)
 
