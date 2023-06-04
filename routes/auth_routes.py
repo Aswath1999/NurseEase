@@ -147,8 +147,7 @@ async def logout(request: Request, response: Response,session: Session = Depends
     session_data = json.loads(session_data_json)
     user_id = session_data.get("user_id")
     print(user_id,type(user_id))
-    print("ok")
-    session.query(Patient).filter(Patient.user_id == user_id).update({"user_id": None}) #the user_id is set to none when the patient logs out
+    # session.query(Patient).filter(Patient.user_id == user_id).update({"user_id": None}) #the user_id is set to none when the patient logs out
     user = session.query(User).filter(User.id == user_id).first()
     user.is_online = False # user is set offline
     session.add(user)

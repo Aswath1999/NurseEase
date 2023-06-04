@@ -20,7 +20,6 @@ class Patient(Base):
     patient = Column(JSONB)
     user_id = Column(String, ForeignKey('users.id'), nullable=True)
     treatment_in_progress = Column(String, nullable=True)
-    
     user = relationship("User", back_populates="patients")
 
 class User(Base):

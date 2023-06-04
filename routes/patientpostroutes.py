@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request,Depends
 from Models.models import Patient,DateEncoder,SessionData
 from config.db import DatabaseManager,database_connection
-from config.db_tables import Patient as pat
+from config.db_tables import User,Patient as pat
 import json
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -9,7 +9,8 @@ from uuid import uuid4
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from .authentication import  is_logged_in
-
+from sqlalchemy import or_,func, and_
+from sqlalchemy.orm import aliased
 
 templates = Jinja2Templates(directory="templates")
 
@@ -63,19 +64,26 @@ async def create_patient(request: Request, session: Session = Depends(database_c
         
         primary_key_uuid = str(uuid4())
         patient.id = primary_key_uuid
-        
         patient_json = json.dumps(patient.dict(by_alias=True), cls=DateEncoder)
+        session_data_json = request.cookies.get("session_data") 
+        session_data = json.loads(session_data_json)
+        user_id = session_data.get("user_id")  
         if assigned_to== "self": 
-            print("ok")
-            session_data_json = request.cookies.get("session_data") 
-            session_data = json.loads(session_data_json)
-            user_id = session_data.get("user_id")  
-            print(user_id)
             patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id,treatment_in_progress=True)
             print(patient_model)
         else:
-            patient_model = pat(id=primary_key_uuid, patient=patient_json,treatment_in_progress=True)
-        
+            try:
+                print("sfjkafba")
+                patient_alias = aliased(pat)
+                users = session.query(User).outerjoin(patient_alias, User.patients).group_by(User.id).having(and_(User.is_online == True, func.count(patient_alias.id) < 3)).filter(User.id != user_id).all()
+                if users:
+                    user_id=users[0].id
+                    print(user_id)
+                    patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id,treatment_in_progress=True)#
+            except Exception as e:
+                print(e)
+
+  
         session.add(patient_model)
         session.commit()
         print("sucess")
@@ -115,8 +123,18 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
         
 
 
+@patient.get("/users")
+async def get_users(request:Request,session: Session = Depends(database_connection) ):
+    try:
+        # Create an aliased instance of the Patient table for the subquery
+        patient_alias = aliased(pat)
 
-
+        users = session.query(User).outerjoin(patient_alias, User.patients).group_by(User.id).having(and_(User.is_online == True, func.count(patient_alias.id) < 3)).filter(User.id != '8e1ce70e-f6b4-44d5-ab78-07841044b92f').all()
+        print("Users")
+        return users
+    except Exception as e:
+        print(e)
+        return e
 
 
 # @patient.get("/patient")

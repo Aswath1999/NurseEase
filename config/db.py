@@ -61,7 +61,7 @@ def database_connection():
 # Usage example:
 # db_manager = DatabaseManager()
 # db_manager.create_tables()
-# db_manager.delete_table('alembic_version')
+# db_manager.delete_table('patient')
 # db_manager.close_connection()
 
 

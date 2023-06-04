@@ -37,42 +37,6 @@ def is_logged_in(func):
     return wrapper
 
 
-
-
-# def get_user_id_from_session(request: Request):
-#     session_data_json = request.cookies.get("session_data")
-#     if session_data_json:
-#         session_data = json.loads(session_data_json)
-#         user_id = session_data.get("user_id")
-#         if user_id:
-#             return user_id
-#     return None
-
-# def is_logged_in(user_id: int = Depends(get_user_id_from_session)):
-#     if user_id:
-#         return user_id
-#     return None
-
-# def is_logged_in(func):
-#     @wraps(func)
-#     async def wrapper(request: Request, *args, **kwargs):
-#         session_id = request.cookies.get("session")
-#         session_data_json = request.cookies.get("session_data")
-#         print("Session ID:", session_id)
-#         print("Session Data:", session_data_json)
-#         if session_data_json:
-#             session_data = json.loads(session_data_json)
-#             user_id = session_data.get("user_id")
-#             print("user_id:", user_id)
-#             if user_id:
-#                 return user_id
-
-#         return RedirectResponse(url='/login')
-
-#     return wrapper
-
-
-
 async def verify_token(token: str,session):
     try:
         print("Verifying token")
