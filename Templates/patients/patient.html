@@ -5,9 +5,13 @@
 {% block heading %}Patients{% endblock %}
 
 {% block content %}
-    <ul>
-        {% for name in names %}
-            <li>{{ name }}</li>
-        {% endfor %}
-    </ul>
+<ul>
+    {% for name, id in names_ids %}
+        <li>
+            {{ name }}
+            <a href="/vitals/{{ id }}">View</a>
+        </li>
+    {% endfor %}
+</ul>
+
 {% endblock %}

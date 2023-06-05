@@ -19,12 +19,13 @@ templates = Jinja2Templates(directory="templates")
 
 observation= APIRouter()
 
-@observation.get("/vitals")
-async def vitals(request: Request):
+@observation.get("/vitals/{id}")
+async def vitals(id: str, request: Request):
     try:
-       return templates.TemplateResponse("Observation/vitals.html", {"request": request})
+        return templates.TemplateResponse("Observation/vitals.html", {"request": request, "id": id})
     except Exception as e:
         print(e)
+
          
 
 @observation.post("/fhir/observation")

@@ -6,8 +6,7 @@
 
 <h1>Submit Vital Sign Observation</h1>
 <form action="/fhir/observation" method="post">
-    <label for="subject">Subject:</label><br>
-    <input type="text" id="subject" name="subject" required><br>
+    <input type="hidden" name="subject" value="{{ id }}">
     
     <label for="effectiveDateTime">Effective Date/Time:</label><br>
     <input type="datetime-local" id="effectiveDateTime" name="effectiveDateTime" required
