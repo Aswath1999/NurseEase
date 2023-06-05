@@ -165,6 +165,7 @@ async def get_individual_patient(request: Request, id: str,session: Session = De
 
 
 """   
+all patients in the database with attributes
 @patient.get("/individualpatient/{id}")
 @is_logged_in
 async def get_individual_patient(request: Request, session: Session = Depends(database_connection)):
