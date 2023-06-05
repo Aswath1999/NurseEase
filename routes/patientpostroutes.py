@@ -221,4 +221,4 @@ async def get_users(request:Request,session: Session = Depends(database_connecti
 
 
 
-#provide all observations of a particular patient
+#provide all observations of a particular patient and present them in graphs
