@@ -6,12 +6,19 @@
 
 {% block content %}
 <ul>
-    {% for name, id in names_ids %}
-        <li>
-            {{ name }}
-            <a href="/vitals/{{ id }}">View</a>
-        </li>
-    {% endfor %}
+    <li>
+        <strong>Name:</strong> {{ patient.name }} <br>
+        <strong>ID:</strong> {{ patient.id }} <br>
+        <strong>Address:</strong> {{ patient.address }} <br>
+            <!-- Add additional fields as needed -->
+            <!-- Example: <strong>Gender:</strong> {{ patient.gender }} <br> -->
+            <!-- Example: <strong>Birth Date:</strong> {{ patient.birth_date }} <br> -->
+            <!-- Example: <strong>Phone Number:</strong> {{ patient.phone_number }} <br> -->
+        <a href="/vitals/{{ patient.id }}">Add Vitals</a>
+    </li>
 </ul>
+
+            <!-- <a href="/vitals/{{ id }}">View</a> -->
+
 
 {% endblock %}

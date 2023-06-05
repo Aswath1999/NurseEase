@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Patients{% endblock %}
+
+{% block heading %}Patients{% endblock %}
+
+{% block content %}
+<ul>
+    {% for name, id in names_ids %}
+        <li>
+            {{ name }}
+            <a href="/individualpatient/{{ id }}">View</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

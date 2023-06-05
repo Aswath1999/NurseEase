@@ -9,8 +9,9 @@ from uuid import uuid4
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from .authentication import  is_logged_in
-from sqlalchemy import or_,func, and_
+from sqlalchemy import or_,func, and_,select
 from sqlalchemy.orm import aliased
+from sqlalchemy.exc import SQLAlchemyError
 
 templates = Jinja2Templates(directory="templates")
 
@@ -104,7 +105,7 @@ async def create_patient(request: Request):
     except Exception as e:
         print(e)
 
-"""
+
 @patient.get("/fhir/patient")
 @is_logged_in
 async def get_all_patient(request: Request,session: Session = Depends(database_connection)):
@@ -122,14 +123,79 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
             print(names)
             ids.append(patient_id)
             print(ids)
-        return templates.TemplateResponse("patients/patient.html", {"request": request,"names_ids": zip(names, ids)})
+        return templates.TemplateResponse("patients/allpatients.html", {"request": request,"names_ids": zip(names, ids)})
 
     except Exception as e:
         print("Error")
         print("Error retrieving patient names:", e)
         return e
-"""      
 
+from sqlalchemy.orm import aliased
+
+@patient.get("/individualpatient/{id}")
+@is_logged_in
+async def get_individual_patient(request: Request, id: str,session: Session = Depends(database_connection)):
+    try:
+        print("s")
+        # Query the patient table based on the id
+        patient = session.query(pat).filter(pat.id == id).first()
+        print(patient)
+        if patient:
+            patient_data = json.loads(patient.patient)
+            # Extract the required attributes from the patient object
+            name = patient_data.get('name', [{}])[0].get('given', [None])[0]
+            address = patient_data.get('address', [{}])[0].get('city', '')
+            # Add additional attribute access as needed
+            print(patient_data)
+            patient_data = {
+                'name': name,
+                'id': id,
+                'address': address,
+                # Add additional attributes as needed
+                # Example: 'gender': patient.gender,
+                # Example: 'birth_date': patient.birth_date,
+                # Example: 'phone_number': patient.phone_number
+            }
+            return templates.TemplateResponse("patients/patient.html", {"request": request, "patient": patient_data})
+        else:
+            return {"error": "Patient not found"}
+    except SQLAlchemyError as e:
+        print("Error retrieving patient:", e)
+        return e
+
+
+"""   
+@patient.get("/individualpatient/{id}")
+@is_logged_in
+async def get_individual_patient(request: Request, session: Session = Depends(database_connection)):
+    try:
+        rows = session.query(pat).all()
+        patients = []
+        for row in rows:
+            patient_data = json.loads(row.patient) if row and row.patient else {}
+            name = patient_data.get('name', [{}])[0].get('given', [None])[0]
+            patient_id = patient_data.get('id')
+            address = patient_data.get('address', [{}])[0].get('city', '')
+            # Add additional fields as needed
+            # Example: gender = patient_data.get('gender', '')
+            # Example: birth_date = patient_data.get('birthDate', '')
+            # Example: phone_number = patient_data.get('telecom', [{}])[0].get('value', '')
+            
+            patient = {
+                'name': name,
+                'id': patient_id,
+                'address': address,
+                # Add additional fields as needed
+                # Example: 'gender': gender,
+                # Example: 'birth_date': birth_date,
+                # Example: 'phone_number': phone_number
+            }
+            patients.append(patient)
+        return templates.TemplateResponse("patients/patient.html", {"request": request, "patients": patients})
+    except Exception as e:
+        print("Error retrieving patient names:", e)
+        return e
+"""
 
 @patient.get("/users")
 async def get_users(request:Request,session: Session = Depends(database_connection) ):
