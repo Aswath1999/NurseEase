@@ -144,3 +144,7 @@ async def get_users(request:Request,session: Session = Depends(database_connecti
 #     try:
 #         # session: Session = connection.session
 #         row = session.query(pat)
+
+
+
+#provide all observations of a particular patient

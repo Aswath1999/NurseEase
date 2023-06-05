@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import  Column,String,Boolean, TIMESTAMP, ForeignKey,DateTime,Float
+from sqlalchemy import  Column,String,Boolean, TIMESTAMP, ForeignKey,DateTime,Float,Integer
 from sqlalchemy.dialects.postgresql import JSONB
 from uuid import uuid4
 from sqlalchemy.sql.expression import text
@@ -9,23 +9,14 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
-
-"""
-class VitalSigns(Base):
-    __tablename__ = 'vital_signs'
-    id = Column(String, primary_key=True,default=str(uuid4()))
-    patient_id = Column(String, ForeignKey('patient.id'))
-    timestamp = Column(DateTime)
-    observation = Column(JSONB)
-
-    patient = relationship("Patient", backref="vital_signs")
-"""
 class VitalSigns(Base):
     __tablename__ = 'vital_signs'
     id = Column(String, primary_key=True, default=str(uuid4()))
     patient_id = Column(String, ForeignKey('patient.id'))
     timestamp = Column(DateTime)
     o2_level = Column(Float)
+    heart_rate = Column(Integer)
+    temperature = Column(Float)
     patient = relationship("Patient", backref="vital_signs")
 
 class Patient(Base):

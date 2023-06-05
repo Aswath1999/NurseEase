@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request,Depends,Form
-from Models.models import Observation
+from Models.models import Observation, ObservationComponent
 from config.db import database_connection
 from config.db_tables import User,Patient as pat,VitalSigns
 import json
@@ -37,17 +37,25 @@ async def change_observation(
         patient_id = form.get('subject')
         O2_level=float(form.get('valueQuantity.value'))
         date = datetime.fromisoformat(form.get('effectiveDateTime'))
+        hr_value = float(form.get('hrValueQuantity'))
+        temp_value = float(form.get('tempValueQuantity'))
         observation = Observation(
             resourceType='Observation',
             code='http://loinc.org|20564-1',
             subject=patient_id,
             effectiveDateTime=date,
             valueQuantity=O2_level,
+            component=[
+                ObservationComponent(code='http://loinc.org|8867-4', valueQuantity=hr_value),
+                ObservationComponent(code='http://loinc.org|8310-5', valueQuantity=temp_value),
+            ]
         )
         vital_signs = VitalSigns(
             patient_id=observation.subject,
             timestamp=observation.effectiveDateTime,
             o2_level=observation.valueQuantity,
+            heart_rate=hr_value,
+            temperature=temp_value,
         )
         session.add(vital_signs)
         session.commit()
