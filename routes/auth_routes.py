@@ -55,7 +55,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
         session.add(new_user)
             # Commit the changes to the database
         session.commit()
-        session.refresh(new_user)
+        session.refresh(new_user) 
         return "sucess" #Add remplate later
     except IntegrityError as e:
         # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
