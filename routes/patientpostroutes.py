@@ -62,14 +62,12 @@ async def create_patient(request: Request, session: Session = Depends(database_c
             ]
         )
         
-        primary_key_uuid = str(uuid4())
-        patient.id = primary_key_uuid
         patient_json = json.dumps(patient.dict(by_alias=True), cls=DateEncoder)
         session_data_json = request.cookies.get("session_data") 
         session_data = json.loads(session_data_json)
         user_id = session_data.get("user_id")  
         if assigned_to== "self": 
-            patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id,treatment_in_progress=True)
+            patient_model = pat(patient=patient_json,user_id=user_id,treatment_in_progress=True)
             print(patient_model)
         else:
             try:
@@ -79,15 +77,16 @@ async def create_patient(request: Request, session: Session = Depends(database_c
                 if users:
                     user_id=users[0].id
                     print(user_id)
-                    patient_model = pat(id=primary_key_uuid, patient=patient_json,user_id=user_id,treatment_in_progress=True)
+                    patient_model = pat(patient=patient_json,user_id=user_id,treatment_in_progress=True)
                 else:  
-                   patient_model = pat(id=primary_key_uuid, patient=patient_json,treatment_in_progress=True) #leave user as empty to assign later
+                   patient_model = pat(patient=patient_json,treatment_in_progress=True) #leave user as empty to assign later
             except Exception as e:
                 print(e)
 
   
         session.add(patient_model)
-        session.commit()
+        session.commit()#
+        session.refresh(patient_model)
         print("sucess")
         return templates.TemplateResponse("success.html", {"request": request})
     

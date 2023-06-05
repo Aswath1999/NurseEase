@@ -46,7 +46,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
         print(password)
         user=UserCreation(username=username,password=password,email=email,id=str(uuid4()))
         print(user) 
-        new_user=User(id=user.id,username=user.username,password=user.password,email=user.email)
+        new_user=User(username=user.username,password=user.password,email=user.email)
 
         print(new_user)
         await sendmail([user.email], user)
@@ -55,6 +55,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
         session.add(new_user)
             # Commit the changes to the database
         session.commit()
+        session.refresh(new_user)
         return "sucess" #Add remplate later
     except IntegrityError as e:
         # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
