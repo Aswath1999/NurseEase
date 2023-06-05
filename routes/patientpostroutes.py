@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request,Depends
 from Models.models import Patient,DateEncoder,SessionData
-from config.db import DatabaseManager,database_connection
+from config.db import database_connection
 from config.db_tables import User,Patient as pat
 import json
 from fastapi.templating import Jinja2Templates
@@ -139,6 +139,7 @@ async def get_users(request:Request,session: Session = Depends(database_connecti
         return e
 
 
+#provide unassigned patients as well
 # @patient.get("/patient")
 # async def get_all_patient(request: Request,session: Session = Depends(database_connection)):
 #     try:

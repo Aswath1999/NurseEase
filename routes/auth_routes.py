@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse,HTMLResponse
 from Models.models import UserCreation, SessionData
 from uuid import uuid4,UUID
 from sqlalchemy.exc import IntegrityError
-from config.db import DatabaseManager, database_connection
+from config.db import database_connection
 from config.db_tables import User, Patient
 import bcrypt
 from .authentication import verify_token,backend

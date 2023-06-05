@@ -7,7 +7,7 @@ from fhir.resources.identifier import Identifier
 from fhir.resources.address import Address
 from json import JSONEncoder
 import re
-
+from datetime import datetime
 
 class DateEncoder(JSONEncoder):
     def default(self, o):
@@ -54,3 +54,18 @@ class SessionData(BaseModel):
 
 
 
+class ObservationComponent(BaseModel):
+    code: str
+    valueQuantity: float
+    interpretation: Optional[str]
+
+class Observation(BaseModel):
+    resourceType: str = Field("Observation", const=True)
+    status: str = Field(default="final")
+    category: List[str] = Field(default_factory=lambda: ["vital-signs"])
+    code: str = Field(default="http://loinc.org|20564-1")
+    subject: str
+    effectiveDateTime: datetime
+    valueQuantity: float
+    interpretation: Optional[str]
+    component: Optional[List[ObservationComponent]]
