@@ -25,6 +25,17 @@
 </ul>
 <div id="dayChart"></div>
 <div id="overallChart"></div>
+<div id="dropdownDay">
+    <select id="dayChartType" onchange="updateDayChart()">
+        <option value="o2">Oxygen Levels</option>
+        <option value="hr">Heart Rate</option>
+    </select>
+</div>
+<div id="dropdownOverall">
+    <select id="overallChartType" onchange="updateOverallChart()">
+        <option value="o2">Oxygen Levels</option>
+    </select>
+</div>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
@@ -36,22 +47,49 @@ const dayHeartRates = {{ heart_rates | tojson }};
 
 // Create the chart for the particular day
 const dayChart = document.getElementById('dayChart');
-Plotly.newPlot(dayChart, [
-  {
-    x: dayLabels,
-    y: dayO2Levels,
-    type: 'scatter',
-    name: 'Oxygen Level',
-    line: { color: 'rgba(75, 192, 192, 1)' },
-  },
-  {
-    x: dayLabels,
-    y: dayHeartRates,
-    type: 'scatter',
-    name: 'Heart Rate',
-    line: { color: 'rgba(192, 75, 75, 1)' },
-  },
-]);
+const dayChartTypeSelect = document.getElementById('dayChartType');
+let currentDayChartType = dayChartTypeSelect.value;
+updateDayChart();
+
+// Update the day chart based on the selected type
+function updateDayChart() {
+    currentDayChartType = dayChartTypeSelect.value;
+    createDayChart(currentDayChartType);
+}
+
+// Create the day chart with the specified type
+function createDayChart(chartType) {
+    const data = [];
+    let yData = [];
+
+    if (chartType === 'o2') {
+        // Oxygen Levels
+        yData = dayO2Levels;
+    } else if (chartType === 'hr') {
+        // Heart Rate
+        yData = dayHeartRates;
+    }
+
+    data.push({
+        x: dayLabels,
+        y: yData,
+        type: 'scatter',
+        line: { color: 'rgba(75, 192, 192, 1)' },
+    });
+
+    const layout = {
+        title: 'Day Chart',
+        xaxis: {
+            title: 'Time',
+            type: 'date',
+        },
+        yaxis: {
+            title: 'Value',
+        },
+    };
+
+    Plotly.newPlot(dayChart, data, layout);
+}
 
 // Calculate the overall trend by taking the average of oxygen levels for each day
 const overallLabels = [];
@@ -62,42 +100,73 @@ const groupedByDay = groupByDay(dayLabels, dayO2Levels);
 
 // Calculate the average oxygen level for each day
 for (const [date, o2Levels] of Object.entries(groupedByDay)) {
-  const avgO2Level = calculateAverage(o2Levels);
-  overallLabels.push(date);
-  overallO2LevelsAvg.push(avgO2Level);
+    const avgO2Level = calculateAverage(o2Levels);
+    overallLabels.push(date);
+    overallO2LevelsAvg.push(avgO2Level);
 }
 
 // Create the chart for the overall trend
 const overallChart = document.getElementById('overallChart');
-Plotly.newPlot(overallChart, [
-  {
-    x: overallLabels,
-    y: overallO2LevelsAvg,
-    type: 'scatter',
-    name: 'Average Oxygen Level',
-    line: { color: 'rgba(75, 192, 192, 1)' },
-  },
-]);
+const overallChartTypeSelect = document.getElementById('overallChartType');
+let currentOverallChartType = overallChartTypeSelect.value;
+updateOverallChart();
+
+// Update the overall chart based on the selected type
+function updateOverallChart() {
+    currentOverallChartType = overallChartTypeSelect.value;
+    createOverallChart(currentOverallChartType);
+}
+
+// Create the overall chart with the specified type
+function createOverallChart(chartType) {
+    const data = [];
+    let yData = [];
+
+    if (chartType === 'o2') {
+        // Oxygen Levels
+        yData = overallO2LevelsAvg;
+    }
+
+    data.push({
+        x: overallLabels,
+        y: yData,
+        type: 'scatter',
+        line: { color: 'rgba(75, 192, 192, 1)' },
+    });
+
+    const layout = {
+        title: 'Overall Trend',
+        xaxis: {
+            title: 'Date',
+            type: 'date',
+        },
+        yaxis: {
+            title: 'Average Value',
+        },
+    };
+
+    Plotly.newPlot(overallChart, data, layout);
+}
 
 // Helper function to group the data by day
 function groupByDay(labels, data) {
-  const groupedData = {};
-  for (let i = 0; i < labels.length; i++) {
-    const label = labels[i];
-    const value = data[i];
-    const day = label.substring(0, 10); // Extract the date part from the timestamp
-    if (!groupedData[day]) {
-      groupedData[day] = [];
+    const groupedData = {};
+    for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
+        const value = data[i];
+        const day = label.substring(0, 10); // Extract the date part from the timestamp
+        if (!groupedData[day]) {
+            groupedData[day] = [];
+        }
+        groupedData[day].push(value);
     }
-    groupedData[day].push(value);
-  }
-  return groupedData;
+    return groupedData;
 }
 
 // Helper function to calculate the average of an array of numbers
 function calculateAverage(numbers) {
-  const sum = numbers.reduce((a, b) => a + b, 0);
-  return sum / numbers.length;
+    const sum = numbers.reduce((a, b) => a + b, 0);
+    return sum / numbers.length;
 }
 </script>
 
