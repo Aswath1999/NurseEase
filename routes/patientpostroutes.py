@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request,Depends
 from Models.models import Patient,DateEncoder,SessionData
 from config.db import database_connection
-from config.db_tables import User,Patient as pat
+from config.db_tables import User,Patient as pat,VitalSigns
 import json
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -139,6 +139,7 @@ async def get_individual_patient(request: Request, id: str,session: Session = De
         print("s")
         # Query the patient table based on the id
         patient = session.query(pat).filter(pat.id == id).first()
+        vitals = session.query(VitalSigns).filter(VitalSigns.patient_id == id).order_by(VitalSigns.timestamp).all()
         print(patient)
         if patient:
             patient_data = json.loads(patient.patient)
@@ -156,7 +157,12 @@ async def get_individual_patient(request: Request, id: str,session: Session = De
                 # Example: 'birth_date': patient.birth_date,
                 # Example: 'phone_number': patient.phone_number
             }
-            return templates.TemplateResponse("patients/patient.html", {"request": request, "patient": patient_data})
+            if vitals:
+                # Extract the oxygen level and heart rate from each vital sign record
+                timestamps = [vital.timestamp.isoformat() for vital in vitals]
+                o2_levels = [vital.o2_level for vital in vitals]
+                heart_rates = [vital.heart_rate for vital in vitals]
+                return templates.TemplateResponse("patients/patient.html", {"request": request,"timestamps": timestamps, "patient": patient_data,"o2_levels": o2_levels, "heart_rates": heart_rates})
         else:
             return {"error": "Patient not found"}
     except SQLAlchemyError as e:

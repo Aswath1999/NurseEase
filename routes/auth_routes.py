@@ -133,6 +133,7 @@ async def login_post(
         return {"message": "Login successful"}
     
     except Exception as e:
+        print(e)
         raise HTTPException(
             detail='An error occurred during login',
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR

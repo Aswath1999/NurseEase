@@ -10,15 +10,95 @@
         <strong>Name:</strong> {{ patient.name }} <br>
         <strong>ID:</strong> {{ patient.id }} <br>
         <strong>Address:</strong> {{ patient.address }} <br>
-            <!-- Add additional fields as needed -->
-            <!-- Example: <strong>Gender:</strong> {{ patient.gender }} <br> -->
-            <!-- Example: <strong>Birth Date:</strong> {{ patient.birth_date }} <br> -->
-            <!-- Example: <strong>Phone Number:</strong> {{ patient.phone_number }} <br> -->
+        <!-- Add additional fields as needed -->
+        <!-- Example: <strong>Gender:</strong> {{ patient.gender }} <br> -->
+        <!-- Example: <strong>Birth Date:</strong> {{ patient.birth_date }} <br> -->
+        <!-- Example: <strong>Phone Number:</strong> {{ patient.phone_number }} <br> -->
         <a href="/vitals/{{ patient.id }}">Add Vitals</a>
     </li>
+    {% for hr in heart_rates %}
+        <li>
+            {{ hr }}
+        </li>
+    {% endfor %}
+    <h1>Vital Signs</h1>
 </ul>
+<div id="dayChart"></div>
+<div id="overallChart"></div>
 
-            <!-- <a href="/vitals/{{ id }}">View</a> -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
+<script>
+// Access the data passed from the backend
+const dayLabels = {{ timestamps | tojson }};
+const dayO2Levels = {{ o2_levels | tojson }};
+const dayHeartRates = {{ heart_rates | tojson }};
+
+// Create the chart for the particular day
+const dayChart = document.getElementById('dayChart');
+Plotly.newPlot(dayChart, [
+  {
+    x: dayLabels,
+    y: dayO2Levels,
+    type: 'scatter',
+    name: 'Oxygen Level',
+    line: { color: 'rgba(75, 192, 192, 1)' },
+  },
+  {
+    x: dayLabels,
+    y: dayHeartRates,
+    type: 'scatter',
+    name: 'Heart Rate',
+    line: { color: 'rgba(192, 75, 75, 1)' },
+  },
+]);
+
+// Calculate the overall trend by taking the average of oxygen levels for each day
+const overallLabels = [];
+const overallO2LevelsAvg = [];
+
+// Group the vital signs by day
+const groupedByDay = groupByDay(dayLabels, dayO2Levels);
+
+// Calculate the average oxygen level for each day
+for (const [date, o2Levels] of Object.entries(groupedByDay)) {
+  const avgO2Level = calculateAverage(o2Levels);
+  overallLabels.push(date);
+  overallO2LevelsAvg.push(avgO2Level);
+}
+
+// Create the chart for the overall trend
+const overallChart = document.getElementById('overallChart');
+Plotly.newPlot(overallChart, [
+  {
+    x: overallLabels,
+    y: overallO2LevelsAvg,
+    type: 'scatter',
+    name: 'Average Oxygen Level',
+    line: { color: 'rgba(75, 192, 192, 1)' },
+  },
+]);
+
+// Helper function to group the data by day
+function groupByDay(labels, data) {
+  const groupedData = {};
+  for (let i = 0; i < labels.length; i++) {
+    const label = labels[i];
+    const value = data[i];
+    const day = label.substring(0, 10); // Extract the date part from the timestamp
+    if (!groupedData[day]) {
+      groupedData[day] = [];
+    }
+    groupedData[day].push(value);
+  }
+  return groupedData;
+}
+
+// Helper function to calculate the average of an array of numbers
+function calculateAverage(numbers) {
+  const sum = numbers.reduce((a, b) => a + b, 0);
+  return sum / numbers.length;
+}
+</script>
 
 {% endblock %}
