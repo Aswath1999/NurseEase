@@ -3,28 +3,28 @@
 
 {% block heading %}Observation{% endblock %}
 {% block content %}
-
-<h1>Submit Vital Sign Observation</h1>
-<form action="/fhir/observation" method="post">
-    <input type="hidden" name="subject" value="{{ id }}">
+<div id="observation-container">
+    <h1>Submit Vital Sign Observation</h1>
+    <form action="/fhir/observation" method="post">
+        <input type="hidden" name="subject" value="{{ id }}">
+        
+        <label for="effectiveDateTime">Effective Date/Time:</label><br>
+        <input type="datetime-local" id="effectiveDateTime" name="effectiveDateTime" required
+               pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"><br>
+        
+        <label for="valueQuantity.value">O2 Level:</label><br>
+        <input type="number" id="valueQuantity.value" name="valueQuantity.value" step="0.01" required><br>
     
-    <label for="effectiveDateTime">Effective Date/Time:</label><br>
-    <input type="datetime-local" id="effectiveDateTime" name="effectiveDateTime" required
-       pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"><br>
-    
-    <label for="valueQuantity.value">O2 Level:</label><br>
-    <input type="number" id="valueQuantity.value" name="valueQuantity.value" step="0.01" required><br>
-
-    <label for="hrValueQuantity">Heart Rate:</label><br>
-    <input type="number" id="hrValueQuantity" name="hrValueQuantity" step="1" required><br>
-    
-    <label for="tempValueQuantity">Temperature:</label><br>
-    <input type="number" id="tempValueQuantity" name="tempValueQuantity" step="0.1" required><br>
-    
-    <label for="interpretation">Interpretation:</label><br>
-    <input type="text" id="interpretation" name="interpretation"><br>
-    
-    <input type="submit" value="Submit">
-</form>
-
+        <label for="hrValueQuantity">Heart Rate:</label><br>
+        <input type="number" id="hrValueQuantity" name="hrValueQuantity" step="1" required><br>
+        
+        <label for="tempValueQuantity">Temperature:</label><br>
+        <input type="number" id="tempValueQuantity" name="tempValueQuantity" step="0.1" required><br>
+        
+        <label for="interpretation">Interpretation:</label><br>
+        <input type="text" id="interpretation" name="interpretation"><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</div>
 {% endblock %}
