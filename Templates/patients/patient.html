@@ -35,7 +35,8 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <script>
-// Access the data passed from the backend
+// Access the data passed from the backend and script for graph
+
 const dayLabels = {{ timestamps | tojson }};
 const dayO2Levels = {{ o2_levels | tojson }};
 const dayHeartRates = {{ heart_rates | tojson }};
