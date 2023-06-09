@@ -51,7 +51,9 @@ class DatabaseManager:
 
 """Function to use in Depends FastAPi"""
 def database_connection():
+    print("Database connection")
     db_manager = DatabaseManager()
+    print("Database manager connected")
     yield db_manager.session
     db_manager.close_connection()
 

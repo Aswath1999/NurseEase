@@ -7,6 +7,10 @@ from fastapi.staticfiles import StaticFiles
 
 app=FastAPI(debug=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+# @app.get('/')
+# async def home(self):
+#     return "hello"
+
 app.include_router(auth)
 app.include_router(patient)
 app.include_router(observation)
