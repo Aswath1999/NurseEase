@@ -12,6 +12,8 @@ from .authentication import  is_logged_in
 from sqlalchemy import or_,func, and_,select
 from sqlalchemy.orm import aliased
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime, date
+
 
 templates = Jinja2Templates(directory="templates")
 
@@ -148,6 +150,12 @@ async def get_individual_patient(request: Request, id: str,session: Session = De
         # Query the patient table based on the id
         patient = session.query(pat).filter(pat.id == id).first()
         vitals = session.query(VitalSigns).filter(VitalSigns.patient_id == id).order_by(VitalSigns.timestamp).all()
+        today = date.today()
+        vitals_today = vitals = session.query(VitalSigns).filter(
+            VitalSigns.timestamp >= datetime.combine(today, datetime.min.time()),
+            VitalSigns.timestamp < datetime.combine(today, datetime.max.time()),
+            VitalSigns.patient_id == id
+        ).all()
         print(patient)
         if patient:
             patient_data = json.loads(patient.patient)
@@ -165,12 +173,15 @@ async def get_individual_patient(request: Request, id: str,session: Session = De
                 # Example: 'birth_date': patient.birth_date,
                 # Example: 'phone_number': patient.phone_number
             }
-            if vitals:
+            if vitals and vitals_today: 
                 # Extract the oxygen level and heart rate from each vital sign record
                 timestamps = [vital.timestamp.isoformat() for vital in vitals]
                 o2_levels = [vital.o2_level for vital in vitals]
                 heart_rates = [vital.heart_rate for vital in vitals]
-                return templates.TemplateResponse("patients/patient.html", {"request": request,"timestamps": timestamps, "patient": patient_data,"o2_levels": o2_levels, "heart_rates": heart_rates})
+                o2_levels_today = [vital.o2_level for vital in vitals_today]
+                time_today= [vital.timestamp.isoformat() for vital in vitals_today]
+                heart_rates_today = [vital.heart_rate for vital in vitals_today]
+                return templates.TemplateResponse("patients/patient.html", {"request": request,"timestamps": timestamps, "patient": patient_data,"o2_levels": o2_levels, "heart_rates": heart_rates,"O2_levels_today": o2_levels_today,"heart_rates_today": heart_rates_today,"time_today":time_today})
         else:
             return {"error": "Patient not found"}
     except SQLAlchemyError as e:

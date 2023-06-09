@@ -3,6 +3,8 @@
 console.log(dayLabels);
 console.log(dayO2Levels);
 console.log(dayHeartRates);
+console.log(O2Levelstoday);
+console.log(timelabel);
 
 // Rest of the JavaScript code goes here...
 
