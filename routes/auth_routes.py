@@ -131,8 +131,12 @@ async def login_post(
         #     return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
         # Return a success response
-        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
-        return {"message": "Login successful"}
+        redirect_url = request.cookies.get("redirect_url")
+        if redirect_url:
+            response.delete_cookie(key="redirect_url")
+            return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
+        else:
+            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
     
     except Exception as e:
         print(e)
