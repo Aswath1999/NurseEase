@@ -74,6 +74,7 @@ async def login(request: Request):
        return templates.TemplateResponse("Auth/login.html", {"request": request})
     except Exception as e:
         print(e)
+        return e
 
 
 @auth.post("/login", include_in_schema=False)
