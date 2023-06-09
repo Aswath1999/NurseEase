@@ -50,19 +50,20 @@ function createDayChart(chartType) {
         });
     }
   
-    const startOfDay = '00:00';
-    const endOfDay = '24:00';
-    const modifiedTimelabel = [startOfDay, ...timelabel, endOfDay];
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const currentDay = String(currentDate.getDate()).padStart(2, '0');
+    const startTime = `${currentYear}-${currentMonth}-${currentDay}T00:00:00`;
+    const endTime = `${currentYear}-${currentMonth}-${currentDay}T23:59:59`;
 
     const layout = {
         title: 'Day chart',
         xaxis: {
             title: 'Time',
-            type: 'date',
-            tickformat: '%H:%M',
-            // tickmode: 'linear',
-            // tick0: startOfDay,
-            // dtick: '01:00:00',
+            tickmode: 'linear',
+            dtick: 3600000, // 1 hour in milliseconds
+            range: [startTime, endTime],  // Set the x-axis range from 00:00 to 24:00
         },
         yaxis: {
             title: 'Value',
