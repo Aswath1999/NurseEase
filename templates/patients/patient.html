@@ -35,12 +35,13 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
 // Access the data passed from the backend
-const dayLabels = JSON.parse('{{ timestamps | tojson }}');
-const dayO2Levels = JSON.parse('{{ o2_levels | tojson }}');
-const dayHeartRates = JSON.parse('{{ heart_rates | tojson }}');
-
-const O2Levelstoday = JSON.parse('{{ O2_levels_today | tojson }}');
+const overallLabels = JSON.parse('{{ timestamps | tojson }}');
+const overallO2Levels = JSON.parse('{{ o2_levels | tojson }}');
+const overallHeartRates = JSON.parse('{{ heart_rates | tojson }}');
+const O2Levelstoday  = JSON.parse('{{ O2_levels_today | tojson }}');
+const Heartratetoday  = JSON.parse('{{ heart_rates_today | tojson }}');
 const timelabel = JSON.parse('{{ time_today | tojson }}');
+
 // Rest of your JavaScript code
 // ...
 
