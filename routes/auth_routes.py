@@ -110,11 +110,8 @@ async def login_post(
                 detail='Invalid email or password',
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
-
-        # Perform additional login actions if needed
         session_data_json = json.dumps(session_data.dict())
         
-        # Set session_id and session_data as cookies
         response.set_cookie(key="session", value=session_id)
         response.set_cookie(key="session_data", value=session_data_json)
         user.is_online = True
@@ -122,15 +119,6 @@ async def login_post(
         session.add(user)
             # Commit the changes to the database
         session.commit()
-        # redirect_url = request.cookies.get("redirect_url")
-        # print(redirect_url)
-        # if redirect_url:
-        #     response.delete_cookie(key="redirect_url")
-        #     print(request.cookies.get("redirect_url"))
-        #     # Redirect the user back to the originally requested URL using a GET request
-        #     return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
-
-        # Return a success response
         redirect_url = request.cookies.get("redirect_url")
         if redirect_url:
             response.delete_cookie(key="redirect_url")
@@ -170,7 +158,7 @@ async def logout(request: Request, response: Response,session: Session = Depends
     if not session_id and not session_data_json:
         return {"message": "No active session"}
     else:
-        return {"message": "Logged out successfully"}
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
 
 
 
