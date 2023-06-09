@@ -49,17 +49,28 @@ function createDayChart(chartType) {
             name: 'Heart Rate',
         });
     }
+  
+    const startOfDay = '00:00';
+    const endOfDay = '24:00';
+    const modifiedTimelabel = [startOfDay, ...timelabel, endOfDay];
 
     const layout = {
         title: 'Day chart',
         xaxis: {
             title: 'Time',
             type: 'date',
+            tickformat: '%H:%M',
+            // tickmode: 'linear',
+            // tick0: startOfDay,
+            // dtick: '01:00:00',
         },
         yaxis: {
             title: 'Value',
         },
     };
+    if (yData.length === 0) {
+        layout.yaxis.range = [80, 100];
+    }
 
     Plotly.newPlot(dayChart, data, layout);
 }
@@ -127,6 +138,9 @@ function createOverallChart(chartType) {
             title: 'Value',
         },
     };
+    if (yData.length === 0) {
+        layout.yaxis.range = [80, 100];
+    }
 
     Plotly.newPlot(overallChart, data, layout);
 }
