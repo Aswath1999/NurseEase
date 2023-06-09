@@ -14,3 +14,5 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth)
 app.include_router(patient)
 app.include_router(observation)
+
+

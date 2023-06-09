@@ -122,9 +122,17 @@ async def login_post(
         session.add(user)
             # Commit the changes to the database
         session.commit()
-      
-        return templates.TemplateResponse("/home.html", {"request": request,"session_data": session_data_json})
+        # redirect_url = request.cookies.get("redirect_url")
+        # print(redirect_url)
+        # if redirect_url:
+        #     response.delete_cookie(key="redirect_url")
+        #     print(request.cookies.get("redirect_url"))
+        #     # Redirect the user back to the originally requested URL using a GET request
+        #     return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
+        # Return a success response
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
+        return {"message": "Login successful"}
     
     except Exception as e:
         print(e)
@@ -177,5 +185,4 @@ async def email_verification(request:Request,token: str,session: Session = Depen
             detail="invalid token",
             headers={'WWW-Authenticate':'Bearer' }
         )
-
 

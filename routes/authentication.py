@@ -16,6 +16,31 @@ backend = InMemoryBackend[UUID, SessionData]()
 cookie_params = CookieParameters()
 
 
+from http.cookies import SimpleCookie
+
+# def is_logged_in(func):
+#     @wraps(func)
+#     async def wrapper(request: Request, *args, **kwargs):
+#         cookie = SimpleCookie(request.headers.get("cookie"))
+#         session_token = cookie.get("session_token")
+#         print(session_token)
+#         if session_token:
+#             try:
+#                 decoded_token = jwt.decode(session_token.value, config("SECRET_KEY"), algorithms=["HS256"])
+#                 user_id = decoded_token.get("user_id")
+#                 if user_id:
+#                     return await func(request, *args, **kwargs)
+#             except jwt.exceptions.DecodeError:
+#                 pass
+
+#         # Store the requested URL in a cookie
+#         redirect_url = request.url.path
+#         response = RedirectResponse(url='/login', status_code=status.HTTP_303_SEE_OTHER)
+#         # response.set_cookie(key="redirect_url", value=redirect_url)
+#         return response
+
+#     return wrapper
+
 
 def is_logged_in(func):
     @wraps(func)
@@ -31,11 +56,9 @@ def is_logged_in(func):
         # Store the requested URL in a cookie
         redirect_url = request.url.path
         response = RedirectResponse(url='/login',status_code=status.HTTP_303_SEE_OTHER)
-        # response.set_cookie(key="redirect_url", value=redirect_url)
+        response.set_cookie(key="redirect_url", value=redirect_url)
         return response
-
     return wrapper
-
 
 async def verify_token(token: str,session):
     try:

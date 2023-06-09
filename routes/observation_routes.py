@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request,Depends,Form
+from fastapi import APIRouter, Request,Depends,Form,status
 from Models.models import Observation, ObservationComponent
 from config.db import database_connection
 from config.db_tables import User,Patient as pat,VitalSigns
@@ -52,6 +52,7 @@ async def change_observation(
             ]
         )
         vital_signs = VitalSigns(
+            id=str(uuid4()),  # Generate a new unique id
             patient_id=observation.subject,
             timestamp=observation.effectiveDateTime,
             o2_level=observation.valueQuantity,
@@ -61,7 +62,8 @@ async def change_observation(
         session.add(vital_signs)
         session.commit()
         session.refresh(vital_signs)
-        return {"message": "Observation created successfully", "observation_id": vital_signs.id}
+        redirect_url = f"/individualpatient/{patient_id}"
+        return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
     except SQLAlchemyError as e:
         print(e)
         return {"error": str(e)}

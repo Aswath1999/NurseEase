@@ -17,6 +17,14 @@ templates = Jinja2Templates(directory="templates")
 
 patient= APIRouter()
 
+
+@patient.get("/")
+async def home(request: Request):
+    try:
+        return templates.TemplateResponse("home.html", {"request": request})
+    except Exception as e:
+        print(e)
+
 #getting names of patients
 @patient.post("/fhir/patient")
 @is_logged_in
@@ -112,7 +120,7 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
     try:
         # session: Session = connection.session
         row = session.query(pat)
-        print(type(row))
+        # print(type(row))
         names = []    
         ids = []    
         for row in row:
@@ -120,9 +128,9 @@ async def get_all_patient(request: Request,session: Session = Depends(database_c
             name = patient_data.get('name', [{}])[0].get('given', [None])[0]
             patient_id = patient_data.get('id')
             names.append(name)
-            print(names)
+            # print(names)
             ids.append(patient_id)
-            print(ids)
+            # print(ids)
         return templates.TemplateResponse("patients/allpatients.html", {"request": request,"names_ids": zip(names, ids)})
 
     except Exception as e:
