@@ -52,7 +52,11 @@ async def change_observation(
             ]
         )
         vital_signs = VitalSigns(
+<<<<<<< HEAD
             id=str(uuid4()),  # Generate a new unique id
+=======
+            id=str(uuid4()), # Generate a new unique id
+>>>>>>> 89e2425 (changes)
             patient_id=observation.subject,
             timestamp=observation.effectiveDateTime,
             o2_level=observation.valueQuantity,
