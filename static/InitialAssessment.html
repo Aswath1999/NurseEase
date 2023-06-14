@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Initial Assessment</title>
+  <style>
+    /* CSS styles for the Initial Assessment page */
+    body {
+      background-color: #8fc2f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .initial-assessment {
+      text-align: center;
+    }
+
+    .arrow {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .test-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .test-box {
+      width: 150px;
+      height: 100px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="initial-assessment">
+    <h1 id="patientHeading"></h1>
+    <h2>Initial Assessment</h2>
+    <div class="test-list">
+      <div class="test-box">Medical History</div>
+      <div class="test-box">Physical Exam</div>
+      <div class="test-box">Psychological Exam</div>
+      <div class="test-box"><a href="Vital_signs.html">Vital Signs</a></div>
+    </div>
+  </div>
+
+  <script>
+    // Get the patient ID from the URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const patientID = params.get('patientID');
+    
+
+    // Set the patient ID in the heading
+    document.getElementById('patientHeading').textContent = `Patient ID_ ${patientID || '1'}`;
+  </script>
+</body>
+</html>

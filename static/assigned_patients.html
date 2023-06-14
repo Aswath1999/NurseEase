@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assigned Patients</title>
+  <style>
+    /* CSS styles for the Assigned Patients page */
+    body {
+      background-color: #8fc2f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .patient-list {
+      text-align: center;
+    }
+
+    .patient-list-item {
+      flex: 0 0 auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 0 10px;
+      background-color: #ccc;
+      margin-bottom: 10px;
+    }
+  </style>
+  <script>
+    function goToPatientDetails(patientID) {
+      const url = `patient_details.html?patientID=${patientID}`;
+      window.location.href = url;
+    }
+  </script>
+</head>
+<body>
+  <div class="patient-list">
+    <h1>Assigned Patients</h1>
+    
+      <div class="patient-list-item" onclick="goToPatientDetails('PatientID_1')"><a href=patient_details.html>PatientID_1</a></div>
+      <div class="patient-list-item" onclick="goToPatientDetails('PatientID_2')">PatientID_2</div>
+      <div class="patient-list-item" onclick="goToPatientDetails('PatientID_3')">PatientID_3</div>
+      <div class="patient-list-item" onclick="goToPatientDetails('PatientID_4')">PatientID_4</div>
+      <div class="patient-list-item" onclick="goToPatientDetails('PatientID_5')">PatientID_5</div>
+      <div class="patient-list-item" onclick="goToPatientDetails('PatientID_6')">PatientID_6</div>
+    
+  </div>
+</body>
+</html>
+

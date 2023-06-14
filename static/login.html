@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phone Application</title>
+  <style>
+    body {
+      background-color: #8fc2f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .logo {
+      max-width: 100px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .app-name {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <img src="logo1.png" alt="Application Logo" class="logo">
+  <h1 class="app-name"><sup style="font-size:30px">NURS</sup><strong style="font-size:50px">E</strong style="font-size:35px">ASE</h1>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Page</title>
+  <style>
+    body {
+      background-color: #8fc2f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .login-container {
+      max-width: 300px;
+      width: 100%;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container h1 {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+    }
+
+    .login-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+  </style>
+  <script>
+    function login() {
+      const nurseID = document.getElementById("nurseID").value;
+      const password = document.getElementById("password").value;
+
+      // Check if nurseID and password are valid (add your own validation logic here)
+      if (nurseID === "Nurseease2023" && password === "Nurseease2023@") {
+        // Redirect to assigned_patients.html
+        window.location.href = "assigned_patients.html";
+      } else {
+        alert("Invalid nurseID or password. Please try again.");
+      }
+    }
+  </script>
+</head>
+<body>
+  <body>
+    <div class="login-container">
+      <h1>Sign In</h1>
+      <form class="login-form" action="assigned_patients.html">
+        <label for="nurseID">NurseID:</label>
+        <input type="text" id="nurseID" placeholder="Enter your UserID" required>
+  
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+  
+        <button type="submit">Login</button>
+      </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .alert {
+      background-color: red;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="alertMessage" class="alert"></div>
+</body>
+</html>
+
+<script>
+window.addEventListener('DOMContentLoaded', (event) => {
+    // Simulating oxygen saturation value
+    const oxygenSaturation = 75;
+  
+    // Checking if oxygen saturation is below threshold
+    if (oxygenSaturation < 80) {
+      const alertMessage = document.getElementById('alertMessage');
+      alertMessage.textContent = `Emergency! Oxygen saturation is ${oxygenSaturation}%. Patient's condition is critical`;
+    }
+  });
+</script> 

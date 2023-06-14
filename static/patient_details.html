@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <title>Patient Details</title>
+  <style>
+    /* CSS styles for the Patient Details page */
+    body {
+      background-color: #8fc2f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .patient-info {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      text-align: right;
+    }
+
+    .assessments-container {
+      text-align: center;
+    }
+
+    .assessment {
+      flex: 0 0 auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 0 10px;
+      background-color: #ccc;
+      margin-bottom: 10px;
+    }
+  
+
+  </style>
+  <script>
+    // Get patient details from URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const patientID = urlParams.get('patientID');
+    window.location.href = InitialAssessment.html;
+
+    // Update patient details on the page
+    document.getElementById("patient-id").innerText = patientID;
+  </script>
+  </head>
+  <body>
+  <div class="patient-info">
+    <h2 id="patient-id"></h2>
+    <p>Patient ID_1</p>
+    <p>Patient's Name: John</p>
+    <p>Bed Number: 01</p>
+    <p>Ward Number: 03</p>
+  </div>
+
+  <div class="assessments-container">
+    <h1>Assessments</h1>
+  
+      <div class="assessment"><a href="InitialAssessment.html">Initial Assessment</a></div>
+      <div class="assessment">Focussed Assessment</div>
+      <div class="assessment">Time-Lapsed Assessment</div>
+      <div class="assessment">Emergency Assessment</div>
+    
+
+  
+  </div>
+</body>
+</html>
