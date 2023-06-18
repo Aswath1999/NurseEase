@@ -16,11 +16,6 @@
         <!-- Example: <strong>Phone Number:</strong> {{ patient.phone_number }} <br> -->
         <a href="/vitals/{{ patient.id }}">Add Vitals</a>
     </li>
-    {% for hr in heart_rates %}
-        <li>
-            {{ hr }}
-        </li>
-    {% endfor %}
     <h1>Vital Signs</h1>
 </ul>
 <div id="dayChart"></div>
