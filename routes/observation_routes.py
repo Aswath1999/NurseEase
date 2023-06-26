@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request,Depends,Form,status
+from fastapi import APIRouter, Request,Depends,Form,status, Query
 from Models.models import Observation, ObservationComponent
 from config.db import database_connection
 from config.db_tables import User,Patient as pat,VitalSigns
@@ -13,7 +13,11 @@ from sqlalchemy import or_,func, and_
 from sqlalchemy.orm import aliased
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
+import random 
 
+from faker import Faker
+def get_faker_instance():
+    return Faker()
 
 templates = Jinja2Templates(directory="templates")
 
@@ -27,7 +31,7 @@ async def vitals(id: str, request: Request):
         print(e)
 
          
-
+"""
 @observation.post("/fhir/observation")
 async def change_observation(
     request: Request,
@@ -68,3 +72,155 @@ async def change_observation(
         print(e)
         return {"error": str(e)}
     
+"""
+@observation.get("/fhir/observation")
+@is_logged_in
+async def get_observation_data(
+    request: Request,
+    id: str = Query(..., description="patientId"),
+    session: Session = Depends(database_connection)
+):
+    try:
+        vitals = session.query(VitalSigns).filter(VitalSigns.patient_id == id).order_by(VitalSigns.timestamp).all()
+        if vitals:
+            # Extract the oxygen level and heart rate from each vital sign record
+            timestamps = [vital.timestamp.isoformat() for vital in vitals]
+            o2_levels = [vital.o2_level for vital in vitals]
+            heart_rates = [vital.heart_rate for vital in vitals]
+            time_today= [vital.timestamp.isoformat() for vital in vitals]
+            return {
+                "timestamps": timestamps,
+                "o2_levels": o2_levels,
+                "heart_rates": heart_rates,
+                "time_today":time_today
+            }
+        else:
+            return {
+                "timestamps": [],
+                "o2_levels": [],
+                "heart_rates": [],
+                "time_today":[]
+            }
+    except SQLAlchemyError as e:
+        print("Error retrieving observation data:", e)
+        return e
+
+
+
+
+@observation.post("/fhir/observation/{patient_id}")
+async def change_observation(
+    patient_id: str,  # Extract patient ID from URL using a path parameter
+    session: Session = Depends(database_connection),
+    faker: Faker = Depends(get_faker_instance)  # Create a dependency for Faker
+):
+    try:
+        # Generate fake data using Faker
+        o2_level = faker.random_int(min=90, max=100)
+        hr_value = faker.random_int(min=60, max=120)
+        temp_value = round(random.uniform(88.5, 105.0), 1)
+        
+        vital_signs = VitalSigns(
+            id=str(uuid4()),  # Generate a new unique id
+            patient_id=patient_id,  # Use patient ID from URL
+            timestamp=datetime.now(),
+            # timestamp=faker.date.recent(),
+            o2_level=o2_level,
+            heart_rate=hr_value,
+            temperature=temp_value,
+        )
+        session.add(vital_signs)
+        session.commit()
+        session.refresh(vital_signs)
+        return {"success": True}
+    except SQLAlchemyError as e:
+        return {"error": str(e)}
+
+"""
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Real-time Data</h1>
+    <div id="data-container"></div>
+
+    <script>
+        // Function to update the data container with the received data
+        function updateDataContainer(data) {
+            // Update the HTML content of the data container
+            $('#data-container').html(data);
+        }
+
+        // Function to send the AJAX request and update the data container
+        function fetchData() {
+            $.ajax({
+                url: '/real-time-data',  // URL of the FastAPI route handler
+                type: 'POST',
+                success: function(response) {
+                    // Update the data container with the received data
+                    updateDataContainer(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+
+        // Schedule the AJAX request to be executed every 5 seconds
+        setInterval(fetchData, 5000);
+
+        // Initial data fetch
+        fetchData();
+    </script>
+</body>
+</html>
+
+"""
+"""
+// Function to send a POST request to generate and save random data
+function sendObservationData(patientId) {
+  $.ajax({
+    url: `/fhir/observation/${patientId}`,
+    type: 'POST',
+    success: function(response) {
+      console.log('Data generated and saved successfully');
+    },
+    error: function(xhr, status, error) {
+      console.error('Error generating and saving data:', error);
+    }
+  });
+}
+
+// Function to send a GET request to retrieve the latest data for visualization
+function getObservationData(patientId) {
+  $.ajax({
+    url: `/fhir/observation/${patientId}`,
+    type: 'GET',
+    success: function(response) {
+      // Update the visualization with the retrieved data
+      // (You will need to write the code to update the visualization here)
+      console.log('Data retrieved successfully');
+    },
+    error: function(xhr, status, error) {
+      console.error('Error retrieving data:', error);
+    }
+  });
+}
+
+// Example usage: Trigger the POST and GET requests at the specified intervals
+setInterval(function() {
+  const urlParts = window.location.href.split('/');
+  const patientId = urlParts[urlParts.length - 1];
+  sendObservationData(patientId);
+}, 5000); // 5 seconds interval
+
+setInterval(function() {
+  const urlParts = window.location.href.split('/');
+  const patientId = urlParts[urlParts.length - 1];
+  getObservationData(patientId);
+}, 10000); // 10 seconds interval
+"""

@@ -28,27 +28,254 @@
 <div id="overallChart"></div>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 // Access the data passed from the backend
-const overallLabels = JSON.parse('{{ timestamps | tojson }}');
-const overallO2Levels = JSON.parse('{{ o2_levels | tojson }}');
-const overallHeartRates = JSON.parse('{{ heart_rates | tojson }}');
-const O2Levelstoday  = JSON.parse('{{ O2_levels_today | tojson }}');
-const Heartratetoday  = JSON.parse('{{ heart_rates_today | tojson }}');
-const timelabel = JSON.parse('{{ time_today | tojson }}');
+// Access the data passed from the backend
+let overallLabels = [];
+let overallO2Levels = [];
+let overallHeartRates = [];
+let O2Levelstoday = [];
+let Heartratetoday = [];
+let timelabel = [];
 
 // Rest of your JavaScript code
-// ...
+const dayChart = document.getElementById('dayChart');
+const chartTypeSelect = document.getElementById('chartType');
+let currentChartType = chartTypeSelect.value;
+updateDayChart();
 
 // Update both the day chart and the overall chart
 function updateCharts() {
     currentChartType = chartTypeSelect.value;
     updateDayChart();
     updateOverallChart();
+    sendObservationData();
+    getObservationData();
 }
 
-// Rest of your JavaScript code
-// ...
+// Create the day chart with the specified type
+function createDayChart(chartType) {
+    const data = [];
+    let yData = [];
+
+    if (chartType === 'o2') {
+        // Oxygen Levels
+        yData = O2Levelstoday;
+        data.push({
+            x: timelabel,
+            y: yData,
+            type: 'scatter',
+            line: { color: 'rgba(75, 192, 192, 1)' },
+            name: 'Oxygen Levels',
+        });
+    } else if (chartType === 'hr') {
+        // Heart Rate
+        yData = Heartratetoday;
+        data.push({
+            x: timelabel,
+            y: yData,
+            type: 'scatter',
+            line: { color: 'rgba(255, 0, 0, 1)' },
+            name: 'Heart Rate',
+        });
+    }
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const currentDay = String(currentDate.getDate()).padStart(2, '0');
+    const startTime = `${currentYear}-${currentMonth}-${currentDay}T00:00:00`;
+    const endTime = `${currentYear}-${currentMonth}-${currentDay}T23:59:59`;
+
+    const layout = {
+        title: 'Day chart',
+        xaxis: {
+            title: 'Time',
+            tickmode: 'linear',
+            dtick: 3600000, // 1 hour in milliseconds
+            range: [startTime, endTime],  // Set the x-axis range from 00:00 to 24:00
+        },
+        yaxis: {
+            title: 'Value',
+        },
+    };
+    if (yData.length === 0) {
+        layout.yaxis.range = [80, 100];
+    }
+
+    Plotly.newPlot(dayChart, data, layout);
+}
+
+// Create the overall chart for the specified type
+const overallChart = document.getElementById('overallChart');
+let currentChartTypeOverall = chartTypeSelect.value;
+updateOverallChart();
+
+// Create the overall chart with the specified type
+function createOverallChart(chartType) {
+    const data = [];
+    let yData = [];
+
+    if (chartType === 'o2') {
+        // Oxygen Levels
+        yData = overallO2Levels;
+        data.push({
+            x: overallLabels,
+            y: yData,
+            type: 'scatter',
+            line: { color: 'rgba(75, 192, 192, 1)' },
+            name: 'Oxygen Levels',
+        });
+    } else if (chartType === 'hr') {
+        // Heart Rate
+        yData = overallHeartRates;
+        data.push({
+            x: overallLabels,
+            y: yData,
+            type: 'scatter',
+            line: { color: 'rgba(255, 0, 0, 1)' },
+            name: 'Heart Rate',
+        });
+    }
+
+    const layout = {
+        title: 'Overall trend',
+        xaxis: {
+            title: 'Date',
+            type: 'date',
+        },
+        yaxis: {
+            title: 'Value',
+        },
+    };
+    if (yData.length === 0) {
+        layout.yaxis.range = [80, 100];
+    }
+
+    Plotly.newPlot(overallChart, data, layout);
+}
+
+// Update the day chart based on the selected type
+function updateDayChart(chartType, overallLabels, overallO2Levels, overallHeartRates, timelabel) {
+    const dayChart = document.getElementById('dayChart');
+    const data = [];
+    let yData = [];
+
+    if (chartType === 'o2') {
+        // Oxygen Levels
+        yData = overallO2Levels;  // Use overallO2Levels instead of O2Levelstoday
+        data.push({
+            x: timelabel,
+            y: yData,
+            type: 'scatter',
+            line: { color: 'rgba(75, 192, 192, 1)' },
+            name: 'Oxygen Levels',
+        });
+    } else if (chartType === 'hr') {
+        // Heart Rate
+        yData = Heartratetoday;
+        data.push({
+            x: timelabel,
+            y: yData,
+            type: 'scatter',
+            line: { color: 'rgba(255, 0, 0, 1)' },
+            name: 'Heart Rate',
+        });
+    }
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const currentDay = String(currentDate.getDate()).padStart(2, '0');
+    const startTime = `${currentYear}-${currentMonth}-${currentDay}T00:00:00`;
+    const endTime = `${currentYear}-${currentMonth}-${currentDay}T23:59:59`;
+
+    const layout = {
+        title: 'Day chart',
+        xaxis: {
+            title: 'Time',
+            tickmode: 'linear',
+            dtick: 3600000, // 1 hour in milliseconds
+            range: [startTime, endTime],  // Set the x-axis range from 00:00 to 24:00
+        },
+        yaxis: {
+            title: 'Value',
+        },
+    };
+    if (yData.length === 0) {
+        layout.yaxis.range = [80, 100];
+    }
+
+    Plotly.newPlot(dayChart, data, layout);
+}
+
+
+
+// Update the overall chart based on the selected type
+function updateOverallChart() {
+    createOverallChart(currentChartType);
+}
+
+// Function to send a POST request to generate and save random data
+function sendObservationData() {
+    const urlParts = window.location.href.split('/');
+    const patientId = urlParts[urlParts.length - 1];
+    $.ajax({
+        url: `/fhir/observation/${patientId}`,
+        type: 'POST',
+        success: function(response) {
+            console.log('Data generated and saved successfully');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error generating and saving data:', error);
+        }
+    });
+}
+
+// Function to send a GET request to retrieve the latest data for visualization
+function getObservationData() {
+    const urlParts = window.location.href.split('/');
+    const patientId = urlParts[urlParts.length - 1];
+    $.ajax({
+        url: `/fhir/observation?id=${patientId}`,
+        type: 'GET',
+        success: function(response) {
+            overallLabels = response.timestamps;
+            overallO2Levels = response.o2_levels;
+            overallHeartRates = response.heart_rates;
+            timelabel = response.time_today;
+            O2Levelstoday = response.o2_levels_today;
+            Heartratetoday = response.heart_rates_today;
+            console.log(overallLabels)
+            // Update the visualization with the retrieved data
+            updateDayChart(currentChartType, overallLabels, overallO2Levels, overallHeartRates, timelabel);
+            updateOverallChart(currentChartType);
+            console.log('Data retrieved successfully');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error retrieving data:', error);
+        }
+    });
+}
+
+function sendAndRetrieveObservationData() {
+    sendObservationData();  // Call the function to send observation data
+    getObservationData();   // Call the function to retrieve observation data
+}
+
+// Call the sendAndRetrieveObservationData function initially
+sendAndRetrieveObservationData();
+
+// Call the sendAndRetrieveObservationData function every minute
+setInterval(sendAndRetrieveObservationData, 60000);
+
+// Example usage: Trigger the updateCharts() function when the container is loaded
+$(document).ready(function() {
+    updateCharts();
+});
+
+
 </script>
 
 <!-- <script src="{{ url_for('static', path='/script.js') }}"></script> -->
