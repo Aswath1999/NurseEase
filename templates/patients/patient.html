@@ -10,6 +10,12 @@
         width: 600px;
         height: 400px;
         margin-bottom: 20px;
+        margin-right: 10px;
+        display: inline-block; /* Add this style to make the charts appear side by side */
+    }
+
+    .charts-wrapper {
+        text-align: center; /* Add this style to center align the charts horizontally */
     }
 </style>
 <ul>
@@ -24,6 +30,11 @@
         <a href="/vitals/{{ patient.id }}">Add Vitals</a>
     </li>
     <h1>Vital Signs</h1>
+    <div class="charts-wrapper">
+        <div id="o2-chart" class="chart-container"></div>
+        <div id="hr-chart" class="chart-container"></div>
+        <div id="temp-chart" class="chart-container"></div>
+    </div>
 
     <script>
         // Access the data passed from the backend
@@ -40,11 +51,11 @@
             const chartTypes = ['o2', 'hr', 'temp'];
 
             chartTypes.forEach((chartType) => {
-                const chartContainer = document.createElement('div');
-                chartContainer.classList.add('chart-container');
-                document.body.appendChild(chartContainer);
+                const chartContainer = document.getElementById(`${chartType}-chart`);
                 createChart(chartType, chartContainer);
             });
+
+            // ...
         }
 
         // Function to create a chart with the specified type
