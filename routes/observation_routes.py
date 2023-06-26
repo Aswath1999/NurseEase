@@ -11,7 +11,7 @@ from fastapi.responses import RedirectResponse
 from .authentication import  is_logged_in
 from sqlalchemy import or_,func, and_
 from sqlalchemy.orm import aliased
-from datetime import datetime
+from datetime import datetime, date
 from sqlalchemy.exc import SQLAlchemyError
 import random 
 
@@ -81,6 +81,12 @@ async def get_observation_data(
     session: Session = Depends(database_connection)
 ):
     try:
+        today = date.today()
+        vitals_today = session.query(VitalSigns).filter(
+            VitalSigns.timestamp >= datetime.combine(today, datetime.min.time()),
+            VitalSigns.timestamp < datetime.combine(today, datetime.max.time()),
+            VitalSigns.patient_id == id
+        ).all()
         vitals = session.query(VitalSigns).filter(VitalSigns.patient_id == id).order_by(VitalSigns.timestamp).all()
         if vitals:
             # Extract the oxygen level and heart rate from each vital sign record
@@ -88,21 +94,31 @@ async def get_observation_data(
             o2_levels = [vital.o2_level for vital in vitals]
             temperatures=[vital.temperature for vital in vitals]
             heart_rates = [vital.heart_rate for vital in vitals]
-            time_today= [vital.timestamp.isoformat() for vital in vitals]
+            o2_levels_today = [vital.o2_level for vital in vitals_today]
+            time_today= [vital.timestamp.isoformat() for vital in vitals_today]
+            heart_rates_today = [vital.heart_rate for vital in vitals_today]
+            temp_today = [vital.temperature for vital in vitals_today]
             return {
                 "timestamps": timestamps,
                 "o2_levels": o2_levels,
                 "heart_rates": heart_rates,
-                # "time_today":time_today,
-                "temperatures":temperatures
+                "temperatures": temperatures,
+                "time_today": time_today,
+                "temperature_today":temp_today,
+                "heart_rates_today": heart_rates_today,
+                "o2_levels_today": o2_levels_today
+
             }
         else:
             return {
                 "timestamps": [],
                 "o2_levels": [],
                 "heart_rates": [],
-                # "time_today":[],
-                "temperatures":[]
+                "temperatures":[],
+                "time_today":[],
+                "temperature_today":[],
+                "heart_rates_today":[],
+                "o2_levels_today":[],
             }
     except SQLAlchemyError as e:
         print("Error retrieving observation data:", e)

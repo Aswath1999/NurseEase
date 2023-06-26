@@ -31,9 +31,12 @@
     </li>
     <h1>Vital Signs</h1>
     <div class="charts-wrapper">
-        <div id="o2-chart" class="chart-container"></div>
-        <div id="hr-chart" class="chart-container"></div>
-        <div id="temp-chart" class="chart-container"></div>
+        <div id="o2-chart" class="chart-container charts-wrapper"></div>
+        <div id="o2_today-chart" class="chart-container charts-wrapper"></div>
+        <div id="hr-chart" class="chart-container charts-wrapper"></div>
+        <div id="hr_today-chart" class="chart-container charts-wrapper"></div>
+        <div id="temp-chart" class="chart-container charts-wrapper"></div>
+        <div id="temp_today-chart" class="chart-container charts-wrapper"></div>
     </div>
 
     <script>
@@ -42,30 +45,34 @@
         let overallO2Levels = [];
         let overallHeartRates = [];
         let overallTemperatures = [];
-
+        let time_today = [];
+        let o2_today=[];
+        let heart_rates_today = [];
+        let temp_today = [];
         // Create the charts
  
 
         // Function to create all the charts
-        function createCharts() {
-            const chartTypes = ['o2', 'hr', 'temp'];
+        function createCharts(time_today) {
+            const chartTypes = ['o2', 'o2_today', 'hr', 'hr_today', 'temp', 'temp_today'];
 
             chartTypes.forEach((chartType) => {
                 const chartContainer = document.getElementById(`${chartType}-chart`);
-                createChart(chartType, chartContainer);
+                createChart(chartType, chartContainer, time_today, heart_rates_today);
             });
 
             // ...
         }
 
         // Function to create a chart with the specified type
-        function createChart(chartType, container) {
+        function createChart(chartType, container, time_today,heart_rates_today) {
             const data = [];
             let yData = [];
-
+            
             if (chartType === 'o2') {
                 // Oxygen Levels
                 yData = overallO2Levels;
+                // console.log(overallLabels)
                 data.push({
                     x: overallLabels,
                     y: yData,
@@ -73,9 +80,24 @@
                     line: { color: 'rgba(75, 192, 192, 1)' },
                     name: 'Oxygen Levels ',
                 });
-                title = 'Oxygen Levels';
+                title = 'O2 Levels';
                 ytitle= "SpO2"
-            } else if (chartType === 'hr') {
+            }else if (chartType === 'o2_today') {
+                // Heart Rate
+                // console.log(o2_today)
+                yData = o2_today;
+                // console.log(o2_today)
+                data.push({
+                    x: time_today,
+                    y: yData,
+                    type: 'scatter',
+                    line: { color: 'rgba(75, 192, 192, 1)' },
+                    name: 'O2 levels ',
+                });
+                title = 'O2 levels today';
+                ytitle= "SpO2"
+            } 
+            else if (chartType === 'hr') {
                 // Heart Rate
                 yData = overallHeartRates;
                 data.push({
@@ -87,7 +109,20 @@
                 });
                 title = 'Heart Rate Levels';
                 ytitle= "Heart rate"
-            } else if (chartType === 'temp') {
+            }  else if (chartType === 'hr_today') {
+                // Heart Rate
+                yData = heart_rates_today;
+                console.log(yData);
+                data.push({
+                    x: time_today,
+                    y: yData,
+                    type: 'scatter',
+                    line: { color: 'rgba(255, 0, 0, 1)' },
+                    name: 'Heart Rate levels ',
+                });
+                title = 'Heart Rate Levels';
+                ytitle= "Heart rate"
+            }else if (chartType === 'temp') {
                 // Temperature
                 yData = overallTemperatures;
                 data.push({
@@ -99,7 +134,20 @@
                 });
                 title = 'Temperature';
                 ytitle= "Fahrenheit"
+            }else if (chartType === 'temp_today') {
+                // Temperature
+                yData = temp_today;
+                data.push({
+                    x: time_today,
+                    y: yData,
+                    type: 'scatter',
+                    line: { color: 'rgba(0, 0, 255, 1)' },
+                    name: 'Temperature',
+                });
+                title = 'Temperature';
+                ytitle= "Fahrenheit"
             }
+
 
             const layout = {
                 title: title,
@@ -119,16 +167,21 @@
         }
 
         // Update the charts
-        function updateCharts(labels, o2Levels, heartRates, temperatures) {
+        function updateCharts(labels, o2Levels, heartRates, temperatures,o2_levels_today,heart_rates_today,temperature_today,time_today) {
             overallLabels = labels;
             overallO2Levels = o2Levels;
             overallHeartRates = heartRates;
             overallTemperatures = temperatures;
-
+            o2_today=o2_levels_today;
+            heart_rates_today=heart_rates_today;
+            time_today=time_today;
+            temp_today = temperature_today
+            console.log(heart_rates_today)
+            
             const chartContainers = document.querySelectorAll('.chart-container');
             chartContainers.forEach((container, index) => {
-                const chartType = ['o2', 'hr', 'temp'][index];
-                createChart(chartType, container);
+                const chartType = ['o2', 'o2_today','hr','hr_today','temp','temp_today'][index];
+                createChart(chartType, container, time_today,heart_rates_today);
             });
         }
 
@@ -157,12 +210,13 @@
                 url: `/fhir/observation?id=${patientId}`,
                 type: 'GET',
                 success: function(response) {
-                    // overallLabels = response.timestamps;
-                    // overallO2Levels = response.o2_levels;
-                    // overallHeartRates = response.heart_rates;
-                    // overallTemperatures = response.temperatures;
-                    const { timestamps, o2_levels, heart_rates, temperatures } = response;
-                    updateCharts(timestamps, o2_levels, heart_rates, temperatures);
+                    const { timestamps, o2_levels, heart_rates, temperatures,o2_levels_today,heart_rates_today,
+                    temperature_today,time_today } = response;
+                    // console.log(time_today);
+                    updateCharts(timestamps, o2_levels, heart_rates, temperatures,o2_levels_today,heart_rates_today,
+                    temperature_today,time_today);
+                    console.log(heart_rates_today);
+
                     console.log('Data retrieved successfully');
                 },
                 error: function(xhr, status, error) {
@@ -184,7 +238,7 @@
 
         // Example usage: Trigger the updateCharts() function when the container is loaded
         $(document).ready(function() {
-            createCharts();
+            createCharts(time_today,heart_rates_today);
         });
     </script>
 </body>
