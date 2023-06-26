@@ -5,6 +5,35 @@
 {% block heading %}Patients{% endblock %}
 
 {% block content %}
+<div class="menu-bar">
+<ul>
+    <li class="patient_lists"><a href="#">Paitents List</a>
+         <div class="sub-menu-1">
+            <!--<div class="scrollable-list">-->
+        <!--<ul>
+            <li><a href="#">John</a></li>
+            <li><a href="#">gezuzg</a></li>
+            <li><a href="#">eqwafnak</a></li>
+            <li><a href="#">njkaejkfn</a></li>
+            <li><a href="#">ajirh</a></li>
+            <li><a href="#">Askath</a></li>
+            <li><a href="#">anfsak</a></li>
+        </ul>-->
+        <select id="patient_list" onchange="updatepatient()">
+            <option value="id1">John</option>
+            <option value="id2">gezuzg</option>
+            <option value="id3">eqwafnak</option>
+            <option value="id4">njkaejkfn</option>
+            <option value="id5">ajirh</option>
+            <option value="id6">Askathe</option>
+            <option value="id7">anfsak</option>
+        </select>
+    </div>
+</div>
+</li>
+</ul>
+</div>
+
 <ul>
     <li>
         <strong>Name:</strong> {{ patient.name }} <br>

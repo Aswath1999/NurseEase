@@ -1,14 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Login Form{% endblock %}
-{% block heading %}Login form{% endblock %}
+{% block title %}{% endblock %}
+{% block heading %}{% endblock %}
 {% block content %}
+<div class="img-container"><div class="logo"></div>
+    <!--<img src="logo1.png" class="logo"> -->
+   <!--  <div class="img-container"><div class="logo"> </div> -->
+    <h1 class="app-name"><sup style="font-size:30px">NURS</sup><strong style="font-size:50px">E</strong
+            style="font-size:35px">ASE</h1>
+</div>
+
 <div id="login-container">
+    <h3>Login form</h3>
     <form action="/login" method="POST">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <br>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password"pstz required>
         <br>
         <input type="submit" value="Login">
     </form>

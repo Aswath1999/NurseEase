@@ -1,0 +1,11 @@
+DATABASE = 'efejufzh'
+USER='efejufzh'
+user='efejufzh'
+PASSWORD='yYVi39RVX7IZXkKP5wtYdLopoiO-xA7x'
+DATABASE_URL=postgresql://efejufzh:yYVi39RVX7IZXkKP5wtYdLopoiO-xA7x@balarama.db.elephantsql.com:5432/efejufzh
+SECRET_KEY='8601ee332056d23f0d96b154d7dd32a0b95b89e6'
+MAIL_USERNAME="nurseease2023"
+MAIL_PASSWORD='cncpzuatfkgdfcot'
+MAIL_FROM='nurseease2023@gmail.com'
+MAIL_PORT='465'
+MAIL_SERVER='smtp.gmail.com'

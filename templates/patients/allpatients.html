@@ -9,8 +9,8 @@
     <ul id="patients-list">
         {% for name, id in names_ids %}
             <li class="patient-item">
-                <span class="patient-name">{{ name }}</span>
-                <a href="/individualpatient/{{ id }}" class="view-link">View</a>
+                <span class="patient-name"><a href="/individualpatient/{{ id }}" class="view-link">{{ name }}</a></span>
+                <!--<a href="/individualpatient/{{ id }}" class="view-link"></a> -->
             </li>
         {% endfor %}
     </ul>

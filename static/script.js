@@ -216,3 +216,5 @@ function updateDayChart() {
 function updateOverallChart() {
     createOverallChart(currentChartType);
 }
+
+

@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home Page{% endblock %}
 
-{% block heading %}Home{% endblock %}
+{% block heading %}Home Page{% endblock %}
 
 {% block content %}
 dbeq
 {{request.cookies.get("session_data")}}
 {% if request.cookies.get("session_data") %}
-    <a href="/login">Logout</a>
+    <a href="/login" class="logout-btn">Logout</a>
 {% else %}
-    <a href="/login">Login</a>
-    <a href="/register">Signup</a>
+    <a href="/login" class="logout-btn">Login</a>
+    <a href="/register" class="logout-btn">Signup</a>
 {% endif %}
 {% endblock %}
 
