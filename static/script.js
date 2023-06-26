@@ -6,6 +6,7 @@
 
 
 
+
 // Helper function to group the data by day
 // function groupByDay(labels, data) {
 //     const groupedData = {};

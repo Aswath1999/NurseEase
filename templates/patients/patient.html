@@ -96,6 +96,25 @@
                 });
                 title = 'O2 levels today';
                 ytitle= "SpO2"
+                const layout = {
+                    title: title,
+                    xaxis: {
+                        title: 'Time',
+                        type: 'date',
+                        tickformat: '%H:%M:%S', // Customize the tick format for time
+                    },
+                    yaxis: {
+                        title: ytitle,
+                    },
+                };
+                if (yData.length === 0) {
+                    layout.yaxis.range = [80, 100];
+                }
+
+                Plotly.newPlot(container, data, layout);
+                return; // Exit the function after plotting the "o2_today" chart
+    
+
             } 
             else if (chartType === 'hr') {
                 // Heart Rate
@@ -241,9 +260,5 @@
             createCharts(time_today,heart_rates_today);
         });
     </script>
-</body>
-</html>
-
-
-<!-- <script src="{{ url_for('static', path='/script.js') }}"></script> -->
+<script src="{{ url_for('static', path='/script.js') }}"></script>
 {% endblock %}
