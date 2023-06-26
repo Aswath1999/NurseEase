@@ -237,3 +237,11 @@ form input[type="submit"]:hover {
         padding: 10px;
     }
 }
+
+
+/* #Chart */
+.chart-container {
+    width: 800px;
+    height: 400px;
+    margin-bottom: 20px;
+}

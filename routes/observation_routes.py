@@ -86,20 +86,23 @@ async def get_observation_data(
             # Extract the oxygen level and heart rate from each vital sign record
             timestamps = [vital.timestamp.isoformat() for vital in vitals]
             o2_levels = [vital.o2_level for vital in vitals]
+            temperatures=[vital.temperature for vital in vitals]
             heart_rates = [vital.heart_rate for vital in vitals]
             time_today= [vital.timestamp.isoformat() for vital in vitals]
             return {
                 "timestamps": timestamps,
                 "o2_levels": o2_levels,
                 "heart_rates": heart_rates,
-                "time_today":time_today
+                # "time_today":time_today,
+                "temperatures":temperatures
             }
         else:
             return {
                 "timestamps": [],
                 "o2_levels": [],
                 "heart_rates": [],
-                "time_today":[]
+                # "time_today":[],
+                "temperatures":[]
             }
     except SQLAlchemyError as e:
         print("Error retrieving observation data:", e)
