@@ -51,6 +51,7 @@ function createChart(chartType, container, time_today, heart_rates_today) {
       x: time_today,
       y: yData,
       type: "scatter",
+      mode: 'lines+markers',
       line: { color: "rgba(75, 192, 192, 1)" },
       name: "O2 levels ",
     });
@@ -142,9 +143,6 @@ function createChart(chartType, container, time_today, heart_rates_today) {
 }
 
 // Update the charts
-// Update the charts
-// Update the charts
-// Update the charts
 function updateCharts(
     labels,
     o2Levels,
@@ -175,31 +173,37 @@ function updateCharts(
   
         if (numDataPoints > 0) {
           if (o2TodayChart) {
-            // Chart already exists, extend the existing traces
-            const lastDataPoint = { x: [[time_today[time_today.length - 1]]], y: [[yData[yData.length - 1]]] };
-            Plotly.extendTraces(
-              container,
-              lastDataPoint,
-              [0] // Trace index to extend
-            );
+            // Chart already exists, extend the existing trace
+            const lastDataPoints = {
+              x: [time_today.slice(-1)], // Use only the last data point for x-axis
+              y: [yData.slice(-1)], // Use only the last data point for y-axis
+            };
+            Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
           } else {
             // Chart doesn't exist, create it for the first time
             const data = [
               {
-                x: [time_today],
-                y: [yData],
+                x: time_today,
+                y: yData,
                 type: "scatter",
+                mode: 'lines+markers',
                 line: { color: "rgba(75, 192, 192, 1)" },
                 name: "O2 levels",
               },
             ];
-  
+            const lastTimestamp = time_today[numDataPoints - 1];
+            const rangeEnd = new Date(lastTimestamp);
+            rangeEnd.setMinutes(rangeEnd.getMinutes() + 1); 
+            const range = [time_today[Math.max(0, numDataPoints - 10)], rangeEnd];// Add 2 minutes
             const layout = {
               title: "O2 levels today",
               xaxis: {
                 title: "Time",
                 type: "date",
-                tickformat: "%H:%M:%S", // Customize the tick format for time
+                tickformat: "%H:%M", // Customize the tick format for time
+                range:range
+
+
               },
               yaxis: {
                 title: "SpO2",
@@ -223,6 +227,8 @@ function updateCharts(
       }
     });
   }
+  
+  
   
   
 
