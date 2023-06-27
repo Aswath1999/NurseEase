@@ -10,6 +10,8 @@ let o2_today = [];
 let heart_rates_today = [];
 let temp_today = [];
 let o2TodayChart = null;
+let hrTodayChart = null;
+let  tempTodayChart=null;
 // Create the charts
 
 // Function to create all the charts
@@ -62,7 +64,7 @@ function createChart(chartType, container, time_today, heart_rates_today) {
       xaxis: {
         title: "Time",
         type: "date",
-        tickformat: "%H:%M", // Customize the tick format for time
+        tickformat: "%H:%M:%S", // Customize the tick format for time
       },
       yaxis: {
         title: ytitle,
@@ -93,12 +95,30 @@ function createChart(chartType, container, time_today, heart_rates_today) {
     data.push({
       x: time_today,
       y: yData,
+      mode: 'lines+markers',
       type: "scatter",
       line: { color: "rgba(255, 0, 0, 1)" },
       name: "Heart Rate levels ",
     });
-    title = "Heart Rate Levels";
+    title = "HR levels today";
     ytitle = "Heart rate";
+    const layout = {
+      title: title,
+      xaxis: {
+        title: "Time",
+        type: "date",
+        tickformat: "%H:%M:%S", // Customize the tick format for time
+      },
+      yaxis: {
+        title: ytitle,
+      },
+    };
+    if (yData.length === 0) {
+      layout.yaxis.range = [80, 100];
+    }
+
+    hrTodayChart = Plotly.plot(container, data, layout);
+    return;
   } else if (chartType === "temp") {
     // Temperature
     yData = overallTemperatures;
@@ -117,12 +137,30 @@ function createChart(chartType, container, time_today, heart_rates_today) {
     data.push({
       x: time_today,
       y: yData,
+      mode: 'lines+markers',
       type: "scatter",
       line: { color: "rgba(0, 0, 255, 1)" },
       name: "Temperature",
     });
-    title = "Temperature";
-    ytitle = "Fahrenheit";
+    title = "HR levels today";
+    ytitle = "Heart rate";
+    const layout = {
+      title: title,
+      xaxis: {
+        title: "Time",
+        type: "date",
+        tickformat: "%H:%M:%S", // Customize the tick format for time
+      },
+      yaxis: {
+        title: ytitle,
+      },
+    };
+    if (yData.length === 0) {
+      layout.yaxis.range = [80, 100];
+    }
+
+    tempTodayChart = Plotly.plot(container, data, layout);
+    return;
   }
 
   const layout = {
@@ -161,11 +199,11 @@ function updateCharts(
     heart_rates_today = heart_rates_today;
     time_today = time_today;
     temp_today = temperature_today;
-    console.log(heart_rates_today);
   
     const chartContainers = document.querySelectorAll(".chart-container");
     chartContainers.forEach((container, index) => {
       const chartType = ["o2", "o2_today", "hr", "hr_today", "temp", "temp_today"][index];
+  
       if (chartType === "o2_today") {
         // Update the "o2_today" chart using Plotly.extendTraces or Plotly.update
         const yData = o2_today;
@@ -186,24 +224,22 @@ function updateCharts(
                 x: time_today,
                 y: yData,
                 type: "scatter",
-                mode: 'lines+markers',
+                mode: "lines+markers",
                 line: { color: "rgba(75, 192, 192, 1)" },
                 name: "O2 levels",
               },
             ];
             const lastTimestamp = time_today[numDataPoints - 1];
             const rangeEnd = new Date(lastTimestamp);
-            rangeEnd.setMinutes(rangeEnd.getMinutes() + 1); 
-            const range = [time_today[Math.max(0, numDataPoints - 10)], rangeEnd];// Add 2 minutes
+            rangeEnd.setMinutes(rangeEnd.getMinutes() + 2); // Add 2 minutes
+            const range = [time_today[Math.max(0, numDataPoints - 10)], rangeEnd];
             const layout = {
               title: "O2 levels today",
               xaxis: {
                 title: "Time",
                 type: "date",
-                tickformat: "%H:%M", // Customize the tick format for time
-                range:range
-
-
+                tickformat: "%H:%M:%S", // Customize the tick format for time
+                range: range,
               },
               yaxis: {
                 title: "SpO2",
@@ -221,6 +257,112 @@ function updateCharts(
             Plotly.update(container, {}, updateLayout);
           }
         }
+      } else if (chartType === "hr_today") {
+        // Update the "hr_today" chart using Plotly.extendTraces or Plotly.update
+        const yData = heart_rates_today;
+        const numDataPoints = yData.length;
+  
+        if (numDataPoints > 0) {
+          if (hrTodayChart) {
+            // Chart already exists, extend the existing trace
+            const lastDataPoints = {
+              x: [time_today.slice(-1)], // Use only the last data point for x-axis
+              y: [yData.slice(-1)], // Use only the last data point for y-axis
+            };
+            Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
+          } else {
+            // Chart doesn't exist, create it for the first time
+            const data = [
+              {
+                x: time_today,
+                y: yData,
+                type: "scatter",
+                mode: "lines+markers",
+                line: { color: "rgba(255, 0, 0, 1)" },
+                name: "Heart Rate levels",
+              },
+            ];
+            const lastTimestamp = time_today[numDataPoints - 1];
+            const rangeEnd = new Date(lastTimestamp);
+            rangeEnd.setMinutes(rangeEnd.getMinutes() + 2); // Add 2 minutes
+            const range = [time_today[Math.max(0, numDataPoints - 10)], rangeEnd];
+            const layout = {
+              title: "Heart Rate Levels today",
+              xaxis: {
+                title: "Time",
+                type: "date",
+                tickformat:"%H:%M:%S", // Customize the tick format for time
+                range: range,
+              },
+              yaxis: {
+                title: "Heart rate",
+              },
+            };
+  
+            hrTodayChart = Plotly.newPlot(container, data, layout);
+          }
+        } else {
+          // No data points available, update the range of y-axis
+          if (hrTodayChart) {
+            const updateLayout = {
+              "yaxis.range": [60, 120],
+            };
+            Plotly.update(container, {}, updateLayout);
+          }
+        }
+      } else if (chartType === "temp_today") {
+        // Update the "temp_today" chart using Plotly.extendTraces or Plotly.update
+        const yData = temp_today;
+        const numDataPoints = yData.length;
+  
+        if (numDataPoints > 0) {
+          if (tempTodayChart) {
+            // Chart already exists, extend the existing trace
+            const lastDataPoints = {
+              x: [time_today.slice(-1)], // Use only the last data point for x-axis
+              y: [yData.slice(-1)], // Use only the last data point for y-axis
+            };
+            Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
+          } else {
+            // Chart doesn't exist, create it for the first time
+            const data = [
+              {
+                x: time_today,
+                y: yData,
+                mode: 'lines+markers',
+                type: "scatter",
+                line: { color: "rgba(0, 0, 255, 1)" },
+                name: "Temperature",
+              },
+            ];
+            const lastTimestamp = time_today[numDataPoints - 1];
+            const rangeEnd = new Date(lastTimestamp);
+            rangeEnd.setMinutes(rangeEnd.getMinutes() + 2); // Add 2 minutes
+            const range = [time_today[Math.max(0, numDataPoints - 10)], rangeEnd];
+            const layout = {
+              title: "Temperature today",
+              xaxis: {
+                title: "Time",
+                type: "date",
+                tickformat: "%H:%M:%S", // Customize the tick format for time
+                range: range,
+              },
+              yaxis: {
+                title: "Fahrenheit",
+              },
+            };
+  
+            tempTodayChart = Plotly.newPlot(container, data, layout);
+          }
+        } else {
+          // No data points available, update the range of y-axis
+          if (tempTodayChart) {
+            const updateLayout = {
+              "yaxis.range": [96, 104],
+            };
+            Plotly.update(container, {}, updateLayout);
+          }
+        }
       } else {
         // Update other charts
         createChart(chartType, container, time_today, heart_rates_today);
@@ -228,6 +370,7 @@ function updateCharts(
     });
   }
   
+
   
   
   
