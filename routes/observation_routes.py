@@ -135,9 +135,9 @@ async def change_observation(
 ):
     try:
         # Generate fake data using Faker
-        o2_level = faker.random_int(min=90, max=100)
+        o2_level = faker.random_int(min=90, max=95)
         hr_value = faker.random_int(min=60, max=120)
-        temp_value = round(random.uniform(88.5, 105.0), 1)
+        temp_value = round(random.uniform(95.0, 105.0), 1)
         
         vital_signs = VitalSigns(
             id=str(uuid4()),  # Generate a new unique id
