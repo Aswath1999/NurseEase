@@ -31,18 +31,18 @@
     </li>
     <h1>Vital Signs</h1>
     <div class="charts-wrapper">
-        <div id="o2-chart" class="chart-container charts-wrapper"></div>
         <div id="o2_today-chart" class="chart-container charts-wrapper"></div>
-        <div id="hr-chart" class="chart-container charts-wrapper"></div>
+        <div id="o2-chart" class="chart-container charts-wrapper"></div>
         <div id="hr_today-chart" class="chart-container charts-wrapper"></div>
-        <div id="temp-chart" class="chart-container charts-wrapper"></div>
+        <div id="hr-chart" class="chart-container charts-wrapper"></div>
         <div id="temp_today-chart" class="chart-container charts-wrapper"></div>
+        <div id="temp-chart" class="chart-container charts-wrapper"></div>
     </div>
 
 <script>    $(document).ready(function() {
      sendAndRetrieveObservationData();
     // Call the sendAndRetrieveObservationData function every minute
-    setInterval(sendAndRetrieveObservationData, 10000);
+    setInterval(sendAndRetrieveObservationData, 30000);
 
     // createCharts(time_today,heart_rates_today);
 });</script>
