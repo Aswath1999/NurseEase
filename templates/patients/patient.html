@@ -21,25 +21,11 @@
 <div class="menu-bar">
     <ul>
         <li class="patient_lists"><a href="#">Paitents List</a>
-             <div class="sub-menu-1">
-                <!--<div class="scrollable-list">-->
-            <!--<ul>
-                <li><a href="#">John</a></li>
-                <li><a href="#">gezuzg</a></li>
-                <li><a href="#">eqwafnak</a></li>
-                <li><a href="#">njkaejkfn</a></li>
-                <li><a href="#">ajirh</a></li>
-                <li><a href="#">Askath</a></li>
-                <li><a href="#">anfsak</a></li>
-            </ul>-->
-            <select id="patient_list" onchange="updatepatient()">
-                <option value="id1">John</option>
-                <option value="id2">gezuzg</option>
-                <option value="id3">eqwafnak</option>
-                <option value="id4">njkaejkfn</option>
-                <option value="id5">ajirh</option>
-                <option value="id6">Askathe</option>
-                <option value="id7">anfsak</option>
+        <div class="sub-menu-1">
+            <select id="patient_list">
+            {% for name, id in names_ids %}
+            <option value="{{id}}"><a href="/individualpatient/{{ id }}" class="view-link">{{ name }}</a></option>
+            {% endfor %}
             </select>
         </div>
     </div>
@@ -68,6 +54,32 @@
     </div>
 
 <script>    $(document).ready(function() {
+  // Get the dropdown element
+  var dropdown = document.getElementById("patient_list");
+
+// Check if there is a stored selected name in localStorage
+var selectedName = localStorage.getItem("selectedName");
+if (selectedName) {
+    // Set the selected option in the dropdown
+    for (var i = 0; i < dropdown.options.length; i++) {
+        if (dropdown.options[i].text === selectedName) {
+            dropdown.options[i].selected = true;
+            break;
+        }
+    }
+}
+
+// Add event listener for the change event
+dropdown.addEventListener("change", function() {
+    // Get the selected name
+    var selectedName = dropdown.options[dropdown.selectedIndex].text;
+
+    // Store the selected name in localStorage
+    localStorage.setItem("selectedName", selectedName);
+
+    // Redirect to the desired URL
+    window.location.href = "/individualpatient/" + dropdown.value;
+});
      sendAndRetrieveObservationData();
     // Call the sendAndRetrieveObservationData function every minute
     setInterval(sendAndRetrieveObservationData, 30000);

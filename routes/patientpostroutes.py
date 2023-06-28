@@ -147,16 +147,20 @@ from sqlalchemy.orm import aliased
 async def get_individual_patient(request: Request, id: str,session: Session = Depends(database_connection)):
     try:
         print("s")
+        row = session.query(pat)
+        names = []    
+        ids = []    
+        for row in row:
+            patient_data = json.loads(row.patient) if row and row.patient else {}
+            name = patient_data.get('name', [{}])[0].get('given', [None])[0]
+            patient_id = patient_data.get('id')
+            names.append(name)
+            # print(names)
+            ids.append(patient_id)
         # Query the patient table based on the id
         patient = session.query(pat).filter(pat.id == id).first()
         vitals = session.query(VitalSigns).filter(VitalSigns.patient_id == id).order_by(VitalSigns.timestamp).all()
         today = date.today()
-        # vitals_today = session.query(VitalSigns).filter(
-        #     VitalSigns.timestamp >= datetime.combine(today, datetime.min.time()),
-        #     VitalSigns.timestamp < datetime.combine(today, datetime.max.time()),
-        #     VitalSigns.patient_id == id
-        # ).all()
-        # print(vitals_today)
         if patient:
             patient_data = json.loads(patient.patient)
             # Extract the required attributes from the patient object
@@ -172,7 +176,7 @@ async def get_individual_patient(request: Request, id: str,session: Session = De
                 # Example: 'birth_date': patient.birth_date,
                 # Example: 'phone_number': patient.phone_number
             }
-            return templates.TemplateResponse("patients/patient.html", {"request": request, "patient": patient_data})
+            return templates.TemplateResponse("patients/patient.html", {"request": request, "patient": patient_data,"names_ids": zip(names, ids)})
                
         else:
             return {"error": "Patient not found"}
