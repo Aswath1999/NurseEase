@@ -124,7 +124,7 @@ async def login_post(
             response.delete_cookie(key="redirect_url")
             return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
         else:
-            return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
+            return RedirectResponse(url="/fhir/patient", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
     
     except Exception as e:
         print(e)

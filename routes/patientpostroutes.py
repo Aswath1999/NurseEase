@@ -182,37 +182,7 @@ async def get_individual_patient(request: Request, id: str,session: Session = De
 
 
 """   
-all patients in the database with attributes
-@patient.get("/individualpatient/{id}")
-@is_logged_in
-async def get_individual_patient(request: Request, session: Session = Depends(database_connection)):
-    try:
-        rows = session.query(pat).all()
-        patients = []
-        for row in rows:
-            patient_data = json.loads(row.patient) if row and row.patient else {}
-            name = patient_data.get('name', [{}])[0].get('given', [None])[0]
-            patient_id = patient_data.get('id')
-            address = patient_data.get('address', [{}])[0].get('city', '')
-            # Add additional fields as needed
-            # Example: gender = patient_data.get('gender', '')
-            # Example: birth_date = patient_data.get('birthDate', '')
-            # Example: phone_number = patient_data.get('telecom', [{}])[0].get('value', '')
-            
-            patient = {
-                'name': name,
-                'id': patient_id,
-                'address': address,
-                # Add additional fields as needed
-                # Example: 'gender': gender,
-                # Example: 'birth_date': birth_date,
-                # Example: 'phone_number': phone_number
-            }
-            patients.append(patient)
-        return templates.TemplateResponse("patients/patient.html", {"request": request, "patients": patients})
-    except Exception as e:
-        print("Error retrieving patient names:", e)
-        return e
+
 """
 
 @patient.get("/users")

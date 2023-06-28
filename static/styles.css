@@ -1,23 +1,37 @@
-/* General styles */
-body {
-    font-family: Arial, sans-serif;
+body{
+    background-color: #8fc2f1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 50px;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: scroll;
 }
-
 h1, h2 {
     color: #333;
 }
+h1 {
+    padding: 20px;
+    margin: 20px;
+}
 
+h3{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    text-align: center;
+}
 ul {
     list-style-type: none;
     padding: 0;
@@ -29,26 +43,25 @@ li {
 }
 
 a {
-    color: #007bff;
     text-decoration: none;
+    color: #fff
 }
 
 a:hover {
-    text-decoration: underline;
+    background:#2bab0d;
+    border-radius: 3px;
 }
-/* General styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f2f2f2;
-}
+
 
 #patients-container {
     max-width: 800px;
     margin: 0 auto;
+    text-align: center;
     padding: 20px;
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #2bab;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -56,82 +69,72 @@ body {
     color: #333;
 }
 
-#patients-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
 
 .patient-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 0 10px;
+    background-color: #404140;
     margin-bottom: 10px;
+    color:#007bff;
 }
-
 .patient-name {
     font-weight: bold;
+    color: #333;
 }
-
-.view-link {
-    color: #007bff;
-    text-decoration: none;
+.patient-h1{
+    text-align: center;
 }
-
-.view-link:hover {
-    text-decoration: underline;
-}
-
-/* Responsive styles */
 @media screen and (max-width: 600px) {
     #patients-container {
         padding: 10px;
     }
 }
 
-#dayChart, #overallChart {
-    margin-top: 20px;
-}
 
-#dropdownOverall {
-    margin-top: 10px;
-}
-
-#chartType {
-    padding: 5px;
-}
-
-/* Responsive styles */
-@media screen and (max-width: 600px) {
-    .container {
-        padding: 10px;
-    }
-}
-
-
-/*Login styles */
+/* Login styles */
 #login-container {
     max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
+    margin: 0px auto;
+    padding: 30px;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-h1 {
-    color: #333;
-    text-align: center;
-}
+.logo {
+    background-image: url("logo1.png");
+    height: 230px; /*or 70%, or what you want*/
+    background-size: inherit;
+    background-position: center;
+    background-repeat: no-repeat;
+    align-items: center;
+    display: block;
+ }
 
-form {
-    margin-top: 20px;
-}
+ .app-name {
+   font-family: 'Times New Roman', Times, serif;
+   font-weight: bold;
+   text-align: center;
+   align-items: center; 
+   margin: 0;
+ }
+
 
 form label {
-    display: block;
-    margin-bottom: 5px;
+        text-align: left;
+        padding-right: 10px; 
+        display: block;
+        margin-bottom: 8px;
+        /* margin-top: 0px; */
 }
 
 form input[type="text"],
 form input[type="password"] form input[type="email"]{
-    width: 100%;
+    width: 95%;
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -140,14 +143,13 @@ form input[type="password"] form input[type="email"]{
 
 form input[type="submit"] {
     width: 100%;
-    padding: 10px;
+    padding: 30px;
     background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
-
 form input[type="submit"]:hover {
     background-color: #0056b3;
 }
@@ -177,7 +179,7 @@ form input[type="submit"]:hover {
 form input[type="text"],
 form input[type="password"],
 form input[type="email"] {
-    width: 100%;
+    width: 95%;
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -194,54 +196,4 @@ form input[type="submit"] {
     cursor: pointer;
 }
 
-/* Observation */
-#observation-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-form label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-form input[type="datetime-local"],
-form input[type="number"],
-form input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-form input[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-form input[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive styles */
-@media screen and (max-width: 600px) {
-    #observation-container {
-        padding: 10px;
-    }
-}
-
-
-/* #Chart */
-.chart-container {
-    width: 800px;
-    height: 400px;
-    margin-bottom: 20px;
-}
+/* Patient dropdown */
