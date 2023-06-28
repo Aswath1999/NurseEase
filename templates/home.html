@@ -2,16 +2,28 @@
 
 {% block title %}Home{% endblock %}
 
-{% block heading %}Home{% endblock %}
+{% block heading %}
+<div class="center-content">
+    Welcome to the Home Page
+  </div>
+  {% endblock %}
 
 {% block content %}
-dbeq
-{{request.cookies.get("session_data")}}
+<div class="center-content">
+    <p class="text">dbeq{{request.cookies.get("session_data")}}</p>
 {% if request.cookies.get("session_data") %}
-    <a href="/login">Logout</a>
+     <a href="/login" class="button">Logout</a>
+     <a href="/createpatient" class="button">Create Patient</a>
+
 {% else %}
-    <a href="/login">Login</a>
-    <a href="/register">Signup</a>
-{% endif %}
+  <a href="/login" class="button">Login</a>
+  <a href="/register" class="button">Signup</a>
+  <a href="/createpatient" class="button">Create Patient</a>
+  {% endif %}
+</div>
+<!--<div class="center-content button-container">
+  <a href="/createpatient">Create Patient</a>
+</div> -->
 {% endblock %}
+
 

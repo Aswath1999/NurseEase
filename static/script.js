@@ -435,3 +435,8 @@ function sendAndRetrieveObservationData() {
   getObservationData(); // Call the function to retrieve observation data
 }
 
+ // JavaScript code to handle the click event of the "BACK" button
+ var backButton = document.querySelector('.back-button');
+ backButton.addEventListener('click', function() {
+     window.location.href = "/";
+ });

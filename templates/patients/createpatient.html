@@ -4,6 +4,9 @@
 
 {% block heading %}Create Patients{% endblock %}
 {% block content %}
+<a href="/" class="back-button">
+    <div class="back-box">Back</div>
+</a>
 <form action="/fhir/patient" method="post">
     <label for="identifier">Identifier:</label><br>
     <input type="text" id="identifier1" name="identifier" placeholder="Value 1" required><br>

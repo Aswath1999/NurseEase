@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Register Form{% endblock %}
-{% block heading %}Register form{% endblock %}
+{% block heading %}
+<div class="center-content_register">Register form</div>
+{% endblock %}
 {% block content %}
+
+<a href="/" class="back-button">
+    <div class="back-box">Back</div>
+</a>
 <div id="register-container">
     <form action="/register" method="POST">
         <label for="username">Username:</label>
@@ -16,4 +22,11 @@
         <input type="submit" value="Register">
     </form>
 </div>
+<!--<script>
+    // JavaScript code to handle the click event of the "BACK" button
+    var backButton = document.querySelector('.back-button');
+    backButton.addEventListener('click', function() {
+        window.location.href = "/";
+    });
+</script> -->
 {% endblock %}

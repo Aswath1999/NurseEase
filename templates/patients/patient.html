@@ -2,7 +2,10 @@
 
 {% block title %}Patients{% endblock %}
 
-{% block heading %}Patient{% endblock %}
+{% block heading %}
+<div id="center-content">Patient
+</div>
+{% endblock %}
 
 {% block content %}
 <style>
@@ -17,10 +20,49 @@
     .charts-wrapper {
         text-align: center; /* Add this style to center align the charts horizontally */
     }
+
+    /*.logout-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .logout-box {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #ff0000;
+        color: #ffffff;
+        cursor: pointer;
+    }*/
+
+    .logout-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .logout-box,
+    .home-box {
+        display: inline-block;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .logout-box {
+        background-color: #ff0000;
+        color: #ffffff;
+        margin-right: 10px;
+    }
+
+    .home-box {
+        background-color: #007bff;
+        color: #ffffff;
+    }
 </style>
-<div class="menu-bar">
+<div class="menu-bar" id="center-content">
     <ul>
-        <li class="patient_lists"><a href="#">Paitents List</a>
+        <li class="patient_lists"><a href="#">Patients List</a>
         <div class="sub-menu-1">
             <select id="patient_list">
             {% for name, id in names_ids %}
@@ -31,8 +73,15 @@
     </div>
     </li>
     </ul>
+    <div class="logout-button">
+        <a href="/logout" class="home-box">Home</a>
+        <div class="logout-box" id="logout-btn">
+            Logout
+        </div>
+    </div>
     </div>
 <ul>
+    <div id="center-content">
     <li>
         <strong>Name:</strong> {{ patient.name }} <br>
         <strong>ID:</strong> {{ patient.id }} <br>
@@ -42,8 +91,10 @@
         <!-- Example: <strong>Birth Date:</strong> {{ patient.birth_date }} <br> -->
         <!-- Example: <strong>Phone Number:</strong> {{ patient.phone_number }} <br> -->
         <!-- <a href="/vitals/{{ patient.id }}">Add Vitals</a> -->
-    </li>
-    <h1>Vital Signs</h1>
+
+    <li>
+    </div>
+    <h1 id="center-content">Vital Signs</h1>
     <div class="charts-wrapper">
         <div id="o2_today-chart" class="chart-container charts-wrapper"></div>
         <div id="o2-chart" class="chart-container charts-wrapper"></div>
@@ -80,7 +131,20 @@ dropdown.addEventListener("change", function() {
     // Redirect to the desired URL
     window.location.href = "/individualpatient/" + dropdown.value;
 });
-     sendAndRetrieveObservationData();
+
+    // Logout button click event handler
+    $("#logout-btn").click(function() {
+            // Perform logout logic here
+            // For example, redirect to the logout page
+            window.location.href = "/login";
+        });
+     // Home button click event handler
+     $(".home-box").click(function() {
+        // Redirect to the home page
+        window.location.href = "/logout";
+    });
+
+  sendAndRetrieveObservationData();
     // Call the sendAndRetrieveObservationData function every minute
     setInterval(sendAndRetrieveObservationData, 30000);
 

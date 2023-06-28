@@ -197,3 +197,195 @@ form input[type="submit"] {
 }
 
 /* Patient dropdown */
+
+
+/*HomePage*/
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 45vh;
+    text-align: center;
+    padding: 0 px;
+    margin: -10px;
+    /*margin-top: 10px;
+    margin-bottom: 10px;*/
+}
+.center-content a {
+    margin: 5px 0;
+}
+
+.button-container {
+    margin-top: 10px;
+}
+
+
+.button-box {
+    background-color: #00FF00;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.button {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    background-color: green;
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*.center-buttons {
+    margin-top: 20px;
+}*/
+/*.text {
+    margin-bottom: 10px; 
+  }*/
+
+/*RegisterPage*/
+.center-content_register {
+    display: absolute;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 70px;
+    margin: 55px;
+    /*margin-top: 10px;
+    margin-bottom: 10px;*/
+}
+
+
+/*Vitalpage*/
+#center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .menu-bar {
+    /* Additional styles for the menu bar */
+  }
+  
+  
+/*button_home_logout*/
+
+#logout-button,
+#home-button {
+    color: #ffffff;
+    padding: 5px ;
+    border-radius: 5px;
+    cursor: pointer;
+    }
+
+#logout-button:before,
+#home-button:before {
+        content: "";
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        /*border: 1px solid;
+        border-radius: 10px;*/
+    }
+
+#logout-button {
+        margin-left: 10px;
+        background-color: #ff0000;
+        border-color: #ff0000;
+    }
+
+#logout-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+ #home-button {
+        position: absolute;
+        top: 10px;
+        right: 70px;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+/*back-button*/
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.back-box {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+/*CreatePatients */
+
+.create-patient-box {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #0000FF;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin-right: 10px;
+}
+#top-buttons {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+/*notify*/
+/*.notification-number {
+    background-color: red;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 50%;
+    font-size: 12px;
+  }
+  
+  .modal-body {
+    font-size: 16px;
+  }*/
+
+  .notification-button {
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .notification-number {
+    background-color: red;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 50%;
+    font-size: 12px;
+    margin-left: 5px;
+  }
+  
+  .modal-dialog {
+    max-width: 500px;
+  }
+  
+  .modal-content {
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+  
+  .modal-body {
+    font-size: 16px;
+  }
+
+ 
