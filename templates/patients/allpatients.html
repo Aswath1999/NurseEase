@@ -5,16 +5,54 @@
 {% block heading %}{% endblock %}
 
 {% block content %}
+
 <div class="header">
 <h1 class="patient-h1">Patients</h1>
 <div>
-    <a href="/createpatient" class="create-patient-box" id="top-buttons">Create Patient</a>
     <a href="/logout" class="logout-box" id="home-button">Home</a>
     <a href="/login" class="logout-box" id="logout-button">Logout</a>
 </div>
 </div>
 <div id="patients-container">
-    <ul id="patients-list">
+  <div class="button-boxes">
+    <div class="blue-box">
+    <a href="/createpatient" class="blue-button" id="top-buttons">Create Patient</a>
+    </div>
+    <div class="blue-box">
+      <a href="#" class="blue-button">New Assigned Patients</a>
+    </div>
+      
+  
+    <div class="blue-box">
+      <a href="#" class="blue-button">Share</a>
+    </div>
+  <!-- Button trigger modal -->
+   <div class="blue-box">
+      <button type="button" class="blue-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+             Notification <span class="notification-number">5</span>
+       </button>
+     </div>
+<!-- Modal -->
+<!--<div class="modal fade" id="exampleModal" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title fs-5" id="exampleModalLabel">New Message</h6>
+        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        <p>There is a new notification</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+  <ul id="patients-list">
         {% for name, id in names_ids %}
             <li class="patient-item">
                 <span class="patient-name"><a href="/individualpatient/{{ id }}" class="view-link">{{ name }}</a></span>
@@ -22,30 +60,5 @@
         {% endfor %}
     </ul>
 </div>
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    New Message <span class="notification-number">5</span>
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h6 class="modal-title fs-5" id="exampleModalLabel">New Message</h6>
-          <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-        </div>
-        <div class="modal-body">
-          <p>There is a new notification</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
 
 {% endblock %}

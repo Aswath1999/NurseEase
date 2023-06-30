@@ -36,9 +36,11 @@
     }*/
 
     .logout-button {
-        position: absolute;
+        position: fixed;
         top: 10px;
         right: 10px;
+        display: flex;
+        z-index: 9999;
     }
 
     .logout-box,
@@ -60,6 +62,49 @@
         color: #ffffff;
     }
 </style>
+<div class="button-boxes">
+    <div class="blue-box">
+    <a href="/createpatient" class="blue-button" id="top-buttons">Create Patient</a>
+    </div>
+    <div class="blue-box">
+      <a href="#" class="blue-button">New Assigned Patients</a>
+    </div>
+    <div class="blue-box">
+      <a href="#" class="blue-button">Share</a>
+    </div>
+    <div class="blue-box">
+      <a href="#" class="blue-button">Notes</a>
+    </div>
+    <div class="blue-box">
+      <a href="#" class="blue-button">Medical History</a>
+    </div>
+     <!-- Button trigger modal -->
+    <div class="blue-box">
+      <button type="button" class="blue-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+             Notification <span class="notification-number">5</span>
+       </button>
+     </div>
+    
+        <!-- Modal -->
+        <!--<div class="modal fade" id="exampleModal" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h6 class="modal-title fs-5" id="exampleModalLabel">New Message</h6>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+              </div>
+              <div class="modal-body">
+                <p>There is a new notification</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div> 
 <div class="menu-bar" id="center-content">
     <ul>
         <li class="patient_lists"><a href="#">Patients List</a>
@@ -81,11 +126,12 @@
     </div>
     </div>
 <ul>
-    <div id="center-content">
+    <div class="button-container" id="center-content">
     <li>
-        <strong>Name:</strong> {{ patient.name }} <br>
-        <strong>ID:</strong> {{ patient.id }} <br>
-        <strong>Address:</strong> {{ patient.address }} <br>
+        <button class="green-button"><strong>Name:</strong>{{ patient.name }}</button> <br>
+        <button class="green-button"><strong>ID:</strong> {{ patient.id }}</button> <br>
+        <button class="green-button"><strong>Room Number:</strong> {{ 5 }}</button> <br>
+        <button class="green-button"><strong>Bed Number:</strong> {{ 3 }}</button> <br>
         <!-- Add additional fields as needed -->
         <!-- Example: <strong>Gender:</strong> {{ patient.gender }} <br> -->
         <!-- Example: <strong>Birth Date:</strong> {{ patient.birth_date }} <br> -->

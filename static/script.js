@@ -440,3 +440,4 @@ function sendAndRetrieveObservationData() {
  backButton.addEventListener('click', function() {
      window.location.href = "/";
  });
+

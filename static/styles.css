@@ -48,7 +48,7 @@ a {
 }
 
 a:hover {
-    background:#2bab0d;
+   /* background:#2bab0d;*/
     border-radius: 3px;
 }
 
@@ -222,7 +222,7 @@ form input[type="submit"] {
 
 
 .button-box {
-    background-color: #00FF00;
+   background-color: #00FF00;
     padding: 10px;
     margin-bottom: 20px;
 }
@@ -231,7 +231,7 @@ form input[type="submit"] {
     display: inline-block;
     margin-right: 10px;
     padding: 5px 10px;
-    background-color: green;
+   background-color: green;
     color: #000000;
     text-decoration: none;
     cursor: pointer;
@@ -301,24 +301,30 @@ form input[type="submit"] {
     }
 
 #logout-button {
-        position: absolute;
+        position: fixed;
         top: 10px;
         right: 10px;
+        display: flex;
+        z-index: 9999;
     }
 
  #home-button {
-        position: absolute;
+        position: fixed;
         top: 10px;
         right: 70px;
+        display: flex;
+        z-index: 9999;
         background-color: #007bff;
         border-color: #007bff;
     }
 
 /*back-button*/
 .back-button {
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 10px;
+    display: flex;
+    z-index: 9999;
 }
 
 .back-box {
@@ -331,7 +337,7 @@ form input[type="submit"] {
 }
 /*CreatePatients */
 
-.create-patient-box {
+/*.create-patient-box {
     display: inline-block;
     padding: 5px 10px;
     background-color: #0000FF;
@@ -343,8 +349,29 @@ form input[type="submit"] {
     position: absolute;
     top: 10px;
     left: 10px;
-}
-
+}*/
+/*topbuttons*/
+.button-boxes {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    z-index: 9999;
+  }
+  
+  .blue-box {
+    margin-right: 10px;
+  }
+  
+  .blue-button {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
 /*notify*/
 /*.notification-number {
     background-color: red;
@@ -358,15 +385,15 @@ form input[type="submit"] {
     font-size: 16px;
   }*/
 
-  .notification-button {
+.notification-button {
     background-color: white;
     border: 1px solid black;
     padding: 5px 10px;
     display: flex;
     align-items: center;
   }
-  
-  .notification-number {
+
+.notification-number {
     background-color: red;
     color: white;
     padding: 2px 5px;
@@ -375,17 +402,48 @@ form input[type="submit"] {
     margin-left: 5px;
   }
   
-  .modal-dialog {
+.modal-dialog {
     max-width: 500px;
   }
   
-  .modal-content {
+.modal-content {
     border: 1px solid black;
     border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    z-index: 10;
+    width: 300px;
+
+ }
+.modal.fade {
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+   
+.modal-title{
+    text-align: center;
+}
+.modal-footer{
+    text-align: center;
+}
+.modal-body {
+    font-size: 16px;
+    text-align: center;
+    
+}
+
+/* patient-button-vital-signs*/
+
+.button-container {
+    text-align: center;
   }
   
-  .modal-body {
-    font-size: 16px;
-  }
+ /* .green-button {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    cursor: pointer;
+  }*/
+  
 
- 
