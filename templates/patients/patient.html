@@ -67,7 +67,7 @@
     <a href="/createpatient" class="blue-button" id="top-buttons">Create Patient</a>
     </div>
     <div class="blue-box">
-      <a href="#" class="blue-button">New Assigned Patients</a>
+      <a href="#" class="blue-button">New Patients</a>
     </div>
     <div class="blue-box">
       <a href="#" class="blue-button">Share</a>
@@ -126,19 +126,23 @@
     </div>
     </div>
 <ul>
-    <div class="button-container" id="center-content">
-    <li>
-        <button class="green-button"><strong>Name:</strong>{{ patient.name }}</button> <br>
-        <button class="green-button"><strong>ID:</strong> {{ patient.id }}</button> <br>
-        <button class="green-button"><strong>Room Number:</strong> {{ 5 }}</button> <br>
-        <button class="green-button"><strong>Bed Number:</strong> {{ 3 }}</button> <br>
+    <div class="button-container" id="center-content" >
+    <li style="margin-left: -80px;">
+        <button class="green-button"><strong>Name:</strong></button><button> {{ patient.name }}</button> <br>
+        <button class="green-button"><strong>ID:</strong></button><button> {{ patient.id }}</button> <br>
+        
         <!-- Add additional fields as needed -->
         <!-- Example: <strong>Gender:</strong> {{ patient.gender }} <br> -->
         <!-- Example: <strong>Birth Date:</strong> {{ patient.birth_date }} <br> -->
         <!-- Example: <strong>Phone Number:</strong> {{ patient.phone_number }} <br> -->
         <!-- <a href="/vitals/{{ patient.id }}">Add Vitals</a> -->
 
-    <li>
+    </li>
+    <li style="margin-left: 100px;">
+      <button class="green-button"><strong>Room Number:</strong></button><button> {{ 5 }}</button> <br>
+      <button class="green-button"><strong>Bed Number:</strong></button><button> {{ 3 }}</button> <br>
+
+    </li>
     </div>
     <h1 id="center-content">Vital Signs</h1>
     <div class="charts-wrapper">

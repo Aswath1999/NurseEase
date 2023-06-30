@@ -415,7 +415,10 @@ form input[type="submit"] {
 
  }
 .modal.fade {
-    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*background-color: rgba(0, 0, 0, 0.5);*/ 
 }
    
 .modal-title{
@@ -432,9 +435,10 @@ form input[type="submit"] {
 
 /* patient-button-vital-signs*/
 
-.button-container {
-    text-align: center;
-  }
+/*.button-container {
+    /*text-align: center;
+    align-items: center;
+  }*/
   
  /* .green-button {
     background-color: green;
