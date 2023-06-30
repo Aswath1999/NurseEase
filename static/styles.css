@@ -57,12 +57,12 @@ a:hover {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
-    padding: 20px;
+    /*padding: 20px;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #2bab;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    /*background-color: #2bab;*/
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.321);
 }
 
 #patients-container h1 {
@@ -78,10 +78,15 @@ a:hover {
     background-color: #404140;
     margin-bottom: 10px;
     color:#007bff;
+    display: flex; /* Add this property */
+    justify-content: center; /* Add this property */
+    align-items: center; /* Add this property */
 }
 .patient-name {
     font-weight: bold;
     color: #333;
+    text-align: center; 
+   
 }
 .patient-h1{
     text-align: center;
@@ -365,7 +370,7 @@ form input[type="submit"] {
   
   .blue-button {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 5px 7px;
     background-color: #007bff;
     color: #ffffff;
     cursor: pointer;
@@ -373,19 +378,8 @@ form input[type="submit"] {
   }
   
 /*notify*/
-/*.notification-number {
-    background-color: red;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 50%;
-    font-size: 12px;
-  }
-  
-  .modal-body {
-    font-size: 16px;
-  }*/
 
-.notification-button {
+/*.notification-button {
     background-color: white;
     border: 1px solid black;
     padding: 5px 10px;
@@ -421,7 +415,7 @@ form input[type="submit"] {
     /*background-color: rgba(0, 0, 0, 0.5);*/ 
 }
    
-.modal-title{
+/*.modal-title{
     text-align: center;
 }
 .modal-footer{
@@ -431,7 +425,7 @@ form input[type="submit"] {
     font-size: 16px;
     text-align: center;
     
-}
+}*/
 
 /* patient-button-vital-signs*/
 
@@ -451,3 +445,58 @@ form input[type="submit"] {
   }*/
   
 
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    /*background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    border: 1px solid black;
+    padding: 5px 10px;
+    align-items: center;
+    }
+  
+  .notification-number {
+      background-color: red;
+      color: white;
+      padding: 2px 5px;
+      border-radius: 50%;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-footer{
+    text-align: center;
+}
+.modal-body {
+    font-size: 16px;
+    text-align: center;
+    
+}
