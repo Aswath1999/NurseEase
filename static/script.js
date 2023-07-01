@@ -431,7 +431,7 @@ function getObservationData() {
 }
 
 function sendAndRetrieveObservationData() {
-//   sendObservationData();  // Call the function to send observation data
+  sendObservationData();  // Call the function to send observation data
   getObservationData(); // Call the function to retrieve observation data
 }
 
