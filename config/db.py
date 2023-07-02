@@ -5,7 +5,7 @@ from decouple import config
 from config.db_tables import Base
 from fastapi import  HTTPException
 
-
+import os
 
 
 class DatabaseManager:
@@ -50,6 +50,7 @@ class DatabaseManager:
             self.engine.dispose()
 
 """Function to use in Depends FastAPi"""
+
 def database_connection():
     print("Database connection")
     db_manager = DatabaseManager()

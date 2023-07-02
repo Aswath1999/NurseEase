@@ -1,3 +1,4 @@
+#Dockerfile when setting up locally
 # FROM mcr.microsoft.com/devcontainers/python:0-3.11
 # WORKDIR /app
 # COPY requirements.txt .
@@ -5,6 +6,8 @@
 # COPY . .
 # EXPOSE 8000
 # CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+#Dockerfile when setting up in codespaces with codespaces secretts
 FROM mcr.microsoft.com/devcontainers/python:0-3.11
 
 # Install necessary dependencies
@@ -22,31 +25,23 @@ RUN sh get-docker.sh
 
 # Install Docker Compose
 RUN apt-get install -y docker-compose
+
 # Set the working directory
 WORKDIR /app
 
 # Copy the requirements file
 COPY requirements.txt .
 
-
-# Install project dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the project files to the working directory
-COPY . .
-
-# Retrieve the encrypted secrets from GitHub Codespaces
-ARG MY_TOKEN
-RUN export DATABASE=$(gh secret repo get NurseEase DATABASE --json token=${MY_TOKEN} --jq .value --unwrap) \
-    && export DATABASE_URL=$(gh secret repo get NurseEase DATABASE_URL --json token=${MY_TOKEN} --jq .value --unwrap) \
-    && export MAIL_FROM=$(gh secret repo get NurseEase MAIL_FROM --json token=${MY_TOKEN} --jq .value --unwrap) \
-    && export MAIL_PASSWORD=$(gh secret repo get NurseEase MAIL_PASSWORD --json token=${MY_TOKEN} --jq .value --unwrap) \
-    && export MAIL_SERVER=$(gh secret repo get NurseEase MAIL_SERVER --json token=${MY_TOKEN} --jq .value --unwrap) \
-    && export MAIL_USERNAME=$(gh secret repo get NurseEase MAIL_USERNAME --json token=${MY_TOKEN} --jq .value --unwrap) \
-    && export SECRET_KEY=$(gh secret repo get NurseEase SECRET_KEY --json token=${MY_TOKEN} --jq .value --unwrap) \
-    && export USER=$(gh secret repo get NurseEase USER --json token=${MY_TOKEN} --jq .value --unwrap)
-
 # Set the environment variables with the secret values
+ARG DATABASE
+ARG DATABASE_URL
+ARG MAIL_FROM
+ARG MAIL_PASSWORD
+ARG MAIL_SERVER
+ARG MAIL_USERNAME
+ARG SECRET_KEY
+ARG USER
+ARG MAIL_PORT
 ENV DATABASE=${DATABASE}
 ENV DATABASE_URL=${DATABASE_URL}
 ENV MAIL_FROM=${MAIL_FROM}
@@ -55,6 +50,13 @@ ENV MAIL_SERVER=${MAIL_SERVER}
 ENV MAIL_USERNAME=${MAIL_USERNAME}
 ENV SECRET_KEY=${SECRET_KEY}
 ENV USER=${USER}
+ENV MAIL_PORT=${MAIL_PORT}
+
+# Install project dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the project files to the working directory
+COPY . .
 
 # Expose the necessary port
 EXPOSE 8000

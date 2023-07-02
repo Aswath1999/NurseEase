@@ -10,14 +10,14 @@ from Models.models import UserCreation
 from fastapi_mail.errors import ConnectionErrors
 from fastapi import HTTPException, status
 import jwt
-import markdown
+
 
 
 configuration = ConnectionConfig(
     MAIL_USERNAME=config('MAIL_USERNAME'),
     MAIL_PASSWORD=config('MAIL_PASSWORD'),
-    MAIL_FROM=EmailStr(config('MAIL_FROM')),
-    MAIL_PORT=int(config('MAIL_PORT')),
+    MAIL_FROM='nurseease2023@gmail.com',
+    MAIL_PORT=465,
     MAIL_SERVER=config('MAIL_SERVER'),
     MAIL_STARTTLS = False,
     MAIL_SSL_TLS = True,

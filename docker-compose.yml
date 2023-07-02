@@ -1,12 +1,24 @@
 version: '3'
 
 services:
-  web:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
+      #args for getting codespaces secrets
+      args:
+        - DATABASE=${DATABASE}
+        - DATABASE_URL=${DATABASE_URL}
+        - MAIL_FROM=${MAIL_FROM}
+        - MAIL_PASSWORD=${MAIL_PASSWORD}
+        - MAIL_SERVER=${MAIL_SERVER}
+        - MAIL_USERNAME=${MAIL_USERNAME}
+        - SECRET_KEY=${SECRET_KEY}
+        - USER=${USER}
+        - MAIL_PORT=${MAIL_PORT}
     command: uvicorn main:app --host 0.0.0.0 --port 8000
     volumes:
       - .:/app
+      - ./static:/app/static
     ports:
       - "8000:8000"
