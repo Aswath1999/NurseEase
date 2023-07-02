@@ -130,7 +130,7 @@ function createChart(chartType, container, time_today, heart_rates_today) {
       name: "Temperature",
     });
     title = "Temperature";
-    ytitle = "Fahrenheit";
+    ytitle = "Celcius";
   } else if (chartType === "temp_today") {
     // Temperature
     yData = temp_today;
@@ -348,7 +348,7 @@ function updateCharts(
                 range: range,
               },
               yaxis: {
-                title: "Fahrenheit",
+                title: "Celcius",
               },
             };
   
@@ -358,7 +358,7 @@ function updateCharts(
           // No data points available, update the range of y-axis
           if (tempTodayChart) {
             const updateLayout = {
-              "yaxis.range": [96, 104],
+              "yaxis.range": [30, 40],
             };
             Plotly.update(container, {}, updateLayout);
           }
