@@ -10,6 +10,10 @@
 
 {% block content %}
 <div class="center-content">
+  <div class="img-container"><div class="logo"></div>
+  <h1 class="app-name"><sup style="font-size:30px">NURS</sup><strong style="font-size:50px">E</strong
+    style="font-size:35px">ASE</h1>
+  <p>Empowering Nurses for a better tomorrow</p>
 {% if request.cookies.get("session_data") %}
      <a href="/logout" class="button">Logout</a>
      <a href="/fhir/patient" class="button">Patients</a>
