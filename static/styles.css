@@ -111,7 +111,7 @@ a:hover {
 }
 
 .logo {
-    background-image: url("./logo1.png");
+    background-image: url("logo1.png");
     height: 230px; /*or 70%, or what you want*/
     background-size: inherit;
     background-position: center;
