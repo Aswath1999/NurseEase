@@ -10,9 +10,9 @@
 
 {% block content %}
 <div class="center-content">
-    <p class="text">dbeq{{request.cookies.get("session_data")}}</p>
 {% if request.cookies.get("session_data") %}
      <a href="/logout" class="button">Logout</a>
+     <a href="/fhir/patient" class="button">Patients</a>
      <a href="/createpatient" class="button">Create Patient</a>
 
 {% else %}
