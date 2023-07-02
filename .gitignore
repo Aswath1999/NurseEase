@@ -3,3 +3,4 @@ alembic.ini
 .env
 docker
 node_modules
+Spacefile
