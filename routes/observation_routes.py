@@ -107,7 +107,6 @@ async def get_observation_data(
                 "temperature_today":temp_today,
                 "heart_rates_today": heart_rates_today,
                 "o2_levels_today": o2_levels_today
-
             }
         else:
             return {
