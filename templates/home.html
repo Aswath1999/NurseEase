@@ -15,9 +15,9 @@
     style="font-size:35px">ASE</h1>
   <p>Empowering Nurses for a better tomorrow</p>
 {% if request.cookies.get("session_data") %}
-     <a href="/logout" class="button">Logout</a>
      <a href="/fhir/patient" class="button">Patients</a>
      <a href="/createpatient" class="button">Create Patient</a>
+     <a href="/logout" class="button">Logout</a>
 
 {% else %}
   <a href="/login" class="button">Login</a>
