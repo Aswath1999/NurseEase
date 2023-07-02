@@ -19,12 +19,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | g
     && apt-get update \
     && apt-get install -y gh
 
-# Install Docker
-RUN curl -fsSL https://get.docker.com -o get-docker.sh
-RUN sh get-docker.sh
 
-# Install Docker Compose
-RUN apt-get install -y docker-compose
 
 # Set the working directory
 WORKDIR /app
