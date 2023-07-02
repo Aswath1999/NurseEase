@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Register Form{% endblock %}
-{% block heading %}
-<div class="center-content_register">Register form</div>
-{% endblock %}
 {% block content %}
+<div class="img-container"><div class="logo"></div>
+    <!-- <img src="{{ url_for('static', path='logo1.png')}} class="logo"> -->
+   <!--  <div class="img-container"><div class="logo"> </div> -->
+    <h1 class="app-name"><sup style="font-size:30px">NURS</sup><strong style="font-size:50px">E</strong
+            style="font-size:35px">ASE</h1>
+</div>
 
 <a href="/" class="back-button">
     <div class="back-box">Back</div>
@@ -22,11 +25,4 @@
         <input type="submit" value="Register">
     </form>
 </div>
-<!--<script>
-    // JavaScript code to handle the click event of the "BACK" button
-    var backButton = document.querySelector('.back-button');
-    backButton.addEventListener('click', function() {
-        window.location.href = "/";
-    });
-</script> -->
 {% endblock %}
