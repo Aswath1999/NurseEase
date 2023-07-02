@@ -217,6 +217,17 @@ function updateCharts(
               y: [yData.slice(-1)], // Use only the last data point for y-axis
             };
             Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
+               // Update the x-axis range
+            const lastTimestamp = new Date(time_today.slice(-1)[0]);
+            const rangeStart = new Date(lastTimestamp);
+            rangeStart.setMinutes(rangeStart.getMinutes() - 2); // Subtract 2 minutes from the last timestamp
+            const rangeEnd = new Date(lastTimestamp);
+            rangeEnd.setMinutes(rangeEnd.getMinutes() + 2); // Add 2 minutes to the last timestamp
+            const range = [rangeStart, rangeEnd];
+            const updateLayout = {
+              "xaxis.range": range,
+            };
+            Plotly.update(container, {}, updateLayout);
           } else {
             // Chart doesn't exist, create it for the first time
             const data = [
@@ -270,6 +281,17 @@ function updateCharts(
               y: [yData.slice(-1)], // Use only the last data point for y-axis
             };
             Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
+            // Update the x-axis range
+            const lastTimestamp = new Date(time_today.slice(-1)[0]);
+            const rangeStart = new Date(lastTimestamp);
+            rangeStart.setMinutes(rangeStart.getMinutes() - 2); // Subtract 2 minutes from the last timestamp
+            const rangeEnd = new Date(lastTimestamp);
+            rangeEnd.setMinutes(rangeEnd.getMinutes() + 2); // Add 2 minutes to the last timestamp
+            const range = [rangeStart, rangeEnd];
+            const updateLayout = {
+                "xaxis.range": range,
+            };
+            Plotly.update(container, {}, updateLayout);
           } else {
             // Chart doesn't exist, create it for the first time
             const data = [
@@ -323,6 +345,18 @@ function updateCharts(
               y: [yData.slice(-1)], // Use only the last data point for y-axis
             };
             Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
+            Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
+            // Update the x-axis range
+            const lastTimestamp = new Date(time_today.slice(-1)[0]);
+            const rangeStart = new Date(lastTimestamp);
+            rangeStart.setMinutes(rangeStart.getMinutes() - 2); // Subtract 2 minutes from the last timestamp
+            const rangeEnd = new Date(lastTimestamp);
+            rangeEnd.setMinutes(rangeEnd.getMinutes() + 2); // Add 2 minutes to the last timestamp
+            const range = [rangeStart, rangeEnd];
+            const updateLayout = {
+                "xaxis.range": range,
+            };
+            Plotly.update(container, {}, updateLayout);
           } else {
             // Chart doesn't exist, create it for the first time
             const data = [
