@@ -32,7 +32,7 @@ async def register(request: Request):
          
          
 @auth.post("/register",response_class=HTMLResponse)     
-async def register(request: Request,username: str = Form(...), password: str = Form(...),email: str = Form(...),session: Session = Depends(database_connection)):
+async def register(request: Request,response: Response,username: str = Form(...), password: str = Form(...),email: str = Form(...),session: Session = Depends(database_connection)):
     try:
         email_check = session.query(User).filter(User.email ==email).first()
         print(email_check)
@@ -56,7 +56,7 @@ async def register(request: Request,username: str = Form(...), password: str = F
             # Commit the changes to the database
         session.commit()
         session.refresh(new_user) 
-        return "sucess" #Add remplate later
+        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
     except IntegrityError as e:
         # return templates.TemplateResponse("error.html", {"request": request, "error_message": "Username is already taken"})
         print(e)

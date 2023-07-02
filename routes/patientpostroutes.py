@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request,Depends
+from fastapi import APIRouter, Request,Depends,status
 from Models.models import Patient,DateEncoder,SessionData
 from config.db import database_connection
 from config.db_tables import User,Patient as pat,VitalSigns
@@ -30,7 +30,7 @@ async def home(request: Request):
 #getting names of patients
 @patient.post("/fhir/patient")
 @is_logged_in
-async def create_patient(request: Request, session: Session = Depends(database_connection)):
+async def create_patient(request: Request,response: Response, session: Session = Depends(database_connection)):
     try:
         form = await request.form()
         identifier_values = [form.get("identifier1"), form.get("identifier2")]
@@ -101,7 +101,7 @@ async def create_patient(request: Request, session: Session = Depends(database_c
         session.commit()
         session.refresh(patient_model)
         print("sucess")
-        return templates.TemplateResponse("success.html", {"request": request})
+        return RedirectResponse(url="/fhir/patient", status_code=status.HTTP_303_SEE_OTHER,headers=response.headers)
     
     except Exception as e:
         print(e)
