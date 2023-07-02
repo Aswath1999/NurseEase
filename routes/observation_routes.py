@@ -89,11 +89,29 @@ async def get_observation_data(
         ).all()
         vitals = session.query(VitalSigns).filter(VitalSigns.patient_id == id).order_by(VitalSigns.timestamp).all()
         if vitals:
+            hourly_vitals = {}
+            for vital in vitals:
+                timestamp_hour = vital.timestamp.replace(minute=0, second=0, microsecond=0)
+                if timestamp_hour not in hourly_vitals:
+                    hourly_vitals[timestamp_hour] = {
+                        "o2_levels": [],
+                        "heart_rates": [],
+                        "temperatures": []
+                    }
+                hourly_vitals[timestamp_hour]["o2_levels"].append(vital.o2_level)
+                hourly_vitals[timestamp_hour]["heart_rates"].append(vital.heart_rate)
+                hourly_vitals[timestamp_hour]["temperatures"].append(vital.temperature)
+    # Calculate the average values for each hour
+            timestamps = []
+            o2_levels = []
+            heart_rates = []
+            temperatures = []
+            for timestamp_hour, data in hourly_vitals.items():
+                timestamps.append(timestamp_hour.isoformat())
+                o2_levels.append(round(sum(data["o2_levels"]) / len(data["o2_levels"]), 0))
+                heart_rates.append(round(sum(data["heart_rates"]) / len(data["heart_rates"]), 0))
+                temperatures.append(round(sum(data["temperatures"]) / len(data["temperatures"]), 2))
             # Extract the oxygen level and heart rate from each vital sign record
-            timestamps = [vital.timestamp.isoformat() for vital in vitals]
-            o2_levels = [vital.o2_level for vital in vitals]
-            temperatures=[vital.temperature for vital in vitals]
-            heart_rates = [vital.heart_rate for vital in vitals]
             o2_levels_today = [vital.o2_level for vital in vitals_today]
             time_today= [vital.timestamp.isoformat() for vital in vitals_today]
             heart_rates_today = [vital.heart_rate for vital in vitals_today]
