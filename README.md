@@ -37,7 +37,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 </pre>
 
-### Method 2: Docker installation
+### Method 2: Docker installation in github codespaces
 1. After cloning the repository and setting the environment variables, you can run the application with the command
 <pre>
 docker compose up
