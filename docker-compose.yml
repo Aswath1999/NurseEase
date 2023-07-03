@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      #args for getting codespaces secrets
+      #args for getting codespaces secrets 
       args:
         - DATABASE=${DATABASE}
         - DATABASE_URL=${DATABASE_URL}
