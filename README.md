@@ -24,31 +24,23 @@ This application is built with FastAPI and Plotly to automate the reading of vit
 ### Method 1:
 1. Clone the repository:
 <pre>
-```bash
 git clone https://github.com/Aswath1999/NurseEase.git
-```
 </pre>
 2. Activate virtual environment and install the required dependencies
 <pre>
-```bash
 pip install -r requirements.txt
-```
 </pre>
 3. Save the necessary environment variables. The app requires DATABASE_URL, MAIL_USERNAME, MAIL_PASSWORD, MAIL_SERVER and SECRET_KEY to function properly. 
 
 4. Run the application 
 <pre>
-```bash
 uvicorn main:app --reload
-```
 </pre>
 
 ### Method 2: Docker installation
 1. After cloning the repository and setting the environment variables, you can run the application with the command
 <pre>
-```bash
 docker compose up
-```
 </pre>
 
 ## App Demo:
