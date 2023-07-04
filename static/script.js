@@ -30,6 +30,7 @@ function createCharts(time_today) {
 function createChart(chartType, container, time_today, heart_rates_today) {
   const data = [];
   let yData = [];
+  let tick0Value = null;
 
   if (chartType === "o2") {
     // Oxygen Levels
@@ -44,6 +45,8 @@ function createChart(chartType, container, time_today, heart_rates_today) {
     });
     title = "O2 Levels";
     ytitle = "SpO2";
+    tickformat = "d";
+    dtickvalue=1;
   } else if (chartType === "o2_today") {
     // Heart Rate
     // console.log(o2_today)
@@ -65,13 +68,14 @@ function createChart(chartType, container, time_today, heart_rates_today) {
         title: "Time",
         type: "date",
         tickformat: "%H:%M:%S", // Customize the tick format for time
+        
       },
       yaxis: {
         title: ytitle,
       },
     };
     if (yData.length === 0) {
-      layout.yaxis.range = [80, 100];
+      layout.yaxis.range = [80, 120];
     }
 
     o2TodayChart = Plotly.plot(container, data, layout);
@@ -88,6 +92,7 @@ function createChart(chartType, container, time_today, heart_rates_today) {
     });
     title = "Heart Rate Levels";
     ytitle = "Heart rate";
+    tickformat = "d";
   } else if (chartType === "hr_today") {
     // Heart Rate
     yData = heart_rates_today;
@@ -114,7 +119,7 @@ function createChart(chartType, container, time_today, heart_rates_today) {
       },
     };
     if (yData.length === 0) {
-      layout.yaxis.range = [80, 100];
+      layout.yaxis.range = [80, 120];
     }
 
     hrTodayChart = Plotly.plot(container, data, layout);
@@ -131,6 +136,8 @@ function createChart(chartType, container, time_today, heart_rates_today) {
     });
     title = "Temperature";
     ytitle = "Celcius";
+    tickformat = ".1f";
+    dtickvalue=1;
   } else if (chartType === "temp_today") {
     // Temperature
     yData = temp_today;
@@ -156,7 +163,7 @@ function createChart(chartType, container, time_today, heart_rates_today) {
       },
     };
     if (yData.length === 0) {
-      layout.yaxis.range = [80, 100];
+      layout.yaxis.range = [80, 120];
     }
 
     tempTodayChart = Plotly.plot(container, data, layout);

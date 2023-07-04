@@ -114,11 +114,9 @@ async def get_observation_data(
             # Extract the oxygen level and heart rate from each vital sign record
             o2_levels_today = [vital.o2_level for vital in vitals_today]
             time_today= [vital.timestamp.isoformat() for vital in vitals_today]
-            print(time_today)
-            print(timestamps)
             heart_rates_today = [vital.heart_rate for vital in vitals_today]
             temp_today = [vital.temperature for vital in vitals_today]
-            print(time_today)
+       
             return {
                 "timestamps": timestamps,
                 "o2_levels": o2_levels,
@@ -155,9 +153,9 @@ async def change_observation(
 ):
     try:
         # Generate fake data using Faker
-        o2_level = faker.random_int(min=90, max=95)
-        hr_value = faker.random_int(min=70, max=75)
-        temp_value = round(random.uniform(34.0, 37.0), 1)
+        o2_level = faker.random_int(min=93, max=97)
+        hr_value = faker.random_int(min=70, max=76)
+        temp_value = round(random.uniform(34.0, 38.0), 1)
         
         vital_signs = VitalSigns(
             id=str(uuid4()),  # Generate a new unique id
