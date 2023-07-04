@@ -22,7 +22,6 @@ function createCharts(time_today) {
     const chartContainer = document.getElementById(`${chartType}-chart`);
     createChart(chartType, chartContainer, time_today, heart_rates_today);
   });
-
   // ...
 }
 
