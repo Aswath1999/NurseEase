@@ -114,8 +114,12 @@ async def get_observation_data(
             # Extract the oxygen level and heart rate from each vital sign record
             o2_levels_today = [vital.o2_level for vital in vitals_today]
             time_today= [vital.timestamp.isoformat() for vital in vitals_today]
+            print(time_today)
+            print(timestamps)
             heart_rates_today = [vital.heart_rate for vital in vitals_today]
             temp_today = [vital.temperature for vital in vitals_today]
+            time_today, o2_levels_today= zip(*sorted(zip(time_today, o2_levels_today)))
+            print(time_today)
             return {
                 "timestamps": timestamps,
                 "o2_levels": o2_levels,

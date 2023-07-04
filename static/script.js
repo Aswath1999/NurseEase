@@ -199,7 +199,8 @@ function updateCharts(
     heart_rates_today = heart_rates_today;
     time_today = time_today;
     temp_today = temperature_today;
-  
+    console.log(time_today)
+    
     const chartContainers = document.querySelectorAll(".chart-container");
     chartContainers.forEach((container, index) => {
       const chartType = ["o2_today","o2","hr_today",  "hr",  "temp_today", "temp"][index];
@@ -219,6 +220,7 @@ function updateCharts(
             Plotly.extendTraces(container, lastDataPoints, [0]); // Extend the trace with new data points
                // Update the x-axis range
             const lastTimestamp = new Date(time_today.slice(-1)[0]);
+            console.log(lastTimestamp)
             const rangeStart = new Date(lastTimestamp);
             rangeStart.setMinutes(rangeStart.getMinutes() - 2); // Subtract 2 minutes from the last timestamp
             const rangeEnd = new Date(lastTimestamp);
@@ -263,7 +265,7 @@ function updateCharts(
           // No data points available, update the range of y-axis
           if (o2TodayChart) {
             const updateLayout = {
-              "yaxis.range": [80, 100],
+              "yaxis.range": [70, 100],
             };
             Plotly.update(container, {}, updateLayout);
           }
