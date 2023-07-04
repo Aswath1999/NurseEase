@@ -86,7 +86,7 @@ async def get_observation_data(
             VitalSigns.timestamp >= datetime.combine(today, datetime.min.time()),
             VitalSigns.timestamp < datetime.combine(today, datetime.max.time()),
             VitalSigns.patient_id == id
-        ).all()
+        ).order_by(VitalSigns.timestamp).all()
         vitals = session.query(VitalSigns).filter(VitalSigns.patient_id == id).order_by(VitalSigns.timestamp).all()
         if vitals:
             hourly_vitals = {}
@@ -118,7 +118,6 @@ async def get_observation_data(
             print(timestamps)
             heart_rates_today = [vital.heart_rate for vital in vitals_today]
             temp_today = [vital.temperature for vital in vitals_today]
-            time_today, o2_levels_today= zip(*sorted(zip(time_today, o2_levels_today)))
             print(time_today)
             return {
                 "timestamps": timestamps,
