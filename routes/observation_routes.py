@@ -14,6 +14,7 @@ from sqlalchemy.orm import aliased
 from datetime import datetime, date
 from sqlalchemy.exc import SQLAlchemyError
 import random 
+import pytz
 
 from faker import Faker
 def get_faker_instance():
@@ -31,48 +32,7 @@ async def vitals(id: str, request: Request):
         print(e)
 
          
-"""
-@observation.post("/fhir/observation")
-async def change_observation(
-    request: Request,
-    session: Session = Depends(database_connection)
-    ): # Use your Observation Pydantic mo, session: Session = Depends(database_connection)# Add the o2_level field as a form parameter
-    try:
-        form = await request.form()
-        patient_id = form.get('subject')
-        O2_level=float(form.get('valueQuantity.value'))
-        date = datetime.fromisoformat(form.get('effectiveDateTime'))
-        hr_value = float(form.get('hrValueQuantity'))
-        temp_value = float(form.get('tempValueQuantity'))
-        observation = Observation(
-            resourceType='Observation',
-            code='http://loinc.org|20564-1',
-            subject=patient_id,
-            effectiveDateTime=date,
-            valueQuantity=O2_level,
-            component=[
-                ObservationComponent(code='http://loinc.org|8867-4', valueQuantity=hr_value),
-                ObservationComponent(code='http://loinc.org|8310-5', valueQuantity=temp_value),
-            ]
-        )
-        vital_signs = VitalSigns(
-            id=str(uuid4()),  # Generate a new unique id
-            patient_id=observation.subject,
-            timestamp=observation.effectiveDateTime,
-            o2_level=observation.valueQuantity,
-            heart_rate=hr_value,
-            temperature=temp_value,
-        )
-        session.add(vital_signs)
-        session.commit()
-        session.refresh(vital_signs)
-        redirect_url = f"/individualpatient/{patient_id}"
-        return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
-    except SQLAlchemyError as e:
-        print(e)
-        return {"error": str(e)}
-    
-"""
+
 @observation.get("/fhir/observation")
 @is_logged_in
 async def get_observation_data(
@@ -81,7 +41,10 @@ async def get_observation_data(
     session: Session = Depends(database_connection)
 ):
     try:
-        today = date.today()
+        # Determine your local timezone
+        local_tz = pytz.timezone('Europe/Paris') 
+        utc_now = datetime.now(pytz.utc)
+        today = utc_now.astimezone(local_tz)
         vitals_today = session.query(VitalSigns).filter(
             VitalSigns.timestamp >= datetime.combine(today, datetime.min.time()),
             VitalSigns.timestamp < datetime.combine(today, datetime.max.time()),
@@ -114,6 +77,7 @@ async def get_observation_data(
             # Extract the oxygen level and heart rate from each vital sign record
             o2_levels_today = [vital.o2_level for vital in vitals_today]
             time_today= [vital.timestamp.isoformat() for vital in vitals_today]
+            
             heart_rates_today = [vital.heart_rate for vital in vitals_today]
             temp_today = [vital.temperature for vital in vitals_today]
        
@@ -173,6 +137,49 @@ async def change_observation(
     except SQLAlchemyError as e:
         return {"error": str(e)}
 
+
+"""
+@observation.post("/fhir/observation")
+async def change_observation(
+    request: Request,
+    session: Session = Depends(database_connection)
+    ): # Use your Observation Pydantic mo, session: Session = Depends(database_connection)# Add the o2_level field as a form parameter
+    try:
+        form = await request.form()
+        patient_id = form.get('subject')
+        O2_level=float(form.get('valueQuantity.value'))
+        date = datetime.fromisoformat(form.get('effectiveDateTime'))
+        hr_value = float(form.get('hrValueQuantity'))
+        temp_value = float(form.get('tempValueQuantity'))
+        observation = Observation(
+            resourceType='Observation',
+            code='http://loinc.org|20564-1',
+            subject=patient_id,
+            effectiveDateTime=date,
+            valueQuantity=O2_level,
+            component=[
+                ObservationComponent(code='http://loinc.org|8867-4', valueQuantity=hr_value),
+                ObservationComponent(code='http://loinc.org|8310-5', valueQuantity=temp_value),
+            ]
+        )
+        vital_signs = VitalSigns(
+            id=str(uuid4()),  # Generate a new unique id
+            patient_id=observation.subject,
+            timestamp=observation.effectiveDateTime,
+            o2_level=observation.valueQuantity,
+            heart_rate=hr_value,
+            temperature=temp_value,
+        )
+        session.add(vital_signs)
+        session.commit()
+        session.refresh(vital_signs)
+        redirect_url = f"/individualpatient/{patient_id}"
+        return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    except SQLAlchemyError as e:
+        print(e)
+        return {"error": str(e)}
+    
+"""
 """
 <!-- index.html -->
 <!DOCTYPE html>
