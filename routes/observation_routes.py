@@ -11,10 +11,11 @@ from fastapi.responses import RedirectResponse
 from .authentication import  is_logged_in
 from sqlalchemy import or_,func, and_
 from sqlalchemy.orm import aliased
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from sqlalchemy.exc import SQLAlchemyError
 import random 
 import pytz
+from dateutil import tz
 
 from faker import Faker
 def get_faker_instance():
@@ -125,7 +126,6 @@ async def change_observation(
             id=str(uuid4()),  # Generate a new unique id
             patient_id=patient_id,  # Use patient ID from URL
             timestamp=datetime.now(),
-            # timestamp=faker.date.recent(),
             o2_level=o2_level,
             heart_rate=hr_value,
             temperature=temp_value,
@@ -133,6 +133,7 @@ async def change_observation(
         session.add(vital_signs)
         session.commit()
         session.refresh(vital_signs)
+        print("dnjfnaf")
         return {"success": True}
     except SQLAlchemyError as e:
         return {"error": str(e)}
