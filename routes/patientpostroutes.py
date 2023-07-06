@@ -121,7 +121,10 @@ async def create_patient(request: Request):
 async def get_all_patient(request: Request,session: Session = Depends(database_connection)):
     try:
         # session: Session = connection.session
-        row = session.query(pat)
+        session_data_json = request.cookies.get("session_data") 
+        session_data = json.loads(session_data_json)
+        user_id = session_data.get("user_id")  
+        row = session.query(pat).filter(pat.user_id==user_id)
         # print(type(row))
         names = []    
         ids = []    
