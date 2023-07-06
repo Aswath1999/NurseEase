@@ -7,7 +7,9 @@
     <h1 class="app-name"><sup style="font-size:30px">NURS</sup><strong style="font-size:50px">E</strong
             style="font-size:35px">ASE</h1>
 </div>
-
+{%if message%}
+{{message}}
+{% endif%}
 <div id="login-container">
     <h3>Login</h3>
     <form action="/login" method="POST">
