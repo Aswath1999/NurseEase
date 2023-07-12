@@ -11,7 +11,7 @@ from fastapi.responses import RedirectResponse
 from .authentication import  is_logged_in
 from sqlalchemy import or_,func, and_
 from sqlalchemy.orm import aliased
-from datetime import datetime, date, timezone
+from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 import random 
 import pytz
@@ -125,7 +125,7 @@ async def change_observation(
         vital_signs = VitalSigns(
             id=str(uuid4()),  # Generate a new unique id
             patient_id=patient_id,  # Use patient ID from URL
-            timestamp=datetime.now(),
+            timestamp=datetime.now()+timedelta(hours=2), #added 2 hours since pytz didn't work and the utc hours is two hours behind
             o2_level=o2_level,
             heart_rate=hr_value,
             temperature=temp_value,
