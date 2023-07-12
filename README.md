@@ -22,7 +22,7 @@ This application is built with FastAPI and Plotly to automate the reading of vit
 
 ## Installation
 ### Method 1:
-1. Clone the repository:
+1. Clone the github repository:
 <pre>
 git clone https://github.com/Aswath1999/NurseEase.git
 </pre>
