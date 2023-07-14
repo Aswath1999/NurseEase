@@ -44,7 +44,7 @@ docker compose up
 </pre>
 
 ## App Demo:
-You can checkout the app demo at https://nurseease.onrender.com. You can use the username: Nurseease2023 and password: Nurseease2023@ to login or you can create a new account using your email address.
+You can checkout the app demo at https://nurseease.onrender.com. You can use the username: Nurseease2023 and password: Nurseease2023@ to login or you can create a new account using your email address. Have some patience when loading the website for the first time :)
 ![Screenshot](login.png)
 ![Screenshot](patients.png)
 ![Screenshot](vitals.png)
